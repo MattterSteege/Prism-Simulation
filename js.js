@@ -103,61 +103,63 @@ function draw() {
 }
 
 function drawLight() {
-    const lamp = shapes.find(s => s.type === "lamp");
-    lightBeams.forEach((lb) => {
-        var hex = RGBToHex(nmToRGB(lb.wavelength))
-        lb.lightbeam = [];
 
-        for (let i = 0; i < user.maxLightCalculations; i++) {
-            if (i === 0) {
-                const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToDirection_Y(lamp.rotation));
+    //for each "lamp"
+    shapes.forEach((lamp) => {
+        if (lamp.type !== "lamp") return;
 
-                //the normal needs to be between 0 and 360
-                lightbeamnext.normal = lightbeamnext.normal % 360;
-                if (lightbeamnext.normal < 1e-9) lightbeamnext.normal = 0;
-                lightbeamnext.normal -= 180;
+        lightBeams.forEach((lb) => {
+            var hex = RGBToHex(nmToRGB(lb.wavelength))
+            lb.lightbeam = [];
 
-                lightbeamnext.angleDifference = Math.abs(lamp.rotation - lightbeamnext.normal);
+            for (let i = 0; i < user.maxLightCalculations; i++) {
+                if (i === 0) {
+                    const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToDirection_Y(lamp.rotation));
 
-                ctx.beginPath();
-                ctx.moveTo(lamp.lightPointer_x, lamp.lightPointer_y);
-                ctx.lineTo(lightbeamnext.x, lightbeamnext.y);
-                ctx.strokeStyle = hex;
-                ctx.stroke();
+                    //the normal needs to be between 0 and 360
+                    lightbeamnext.normal = lightbeamnext.normal % 360;
+                    if (lightbeamnext.normal < 1e-9) lightbeamnext.normal = 0;
+                    lightbeamnext.normal -= 180;
 
-                //add the angle of the lightbeam
-                lightbeamnext.angle = lamp.rotation;
+                    lightbeamnext.angleDifference = Math.abs(lamp.rotation - lightbeamnext.normal);
 
-                if (user.showNormals) {
-                    //make dotted line
                     ctx.beginPath();
-                    ctx.setLineDash([10, 5]);
-                    let normal_x = lightbeamnext.x + 50 * Math.cos((lightbeamnext.normal + 180) * Math.PI / 180);
-                    let normal_y =  lightbeamnext.y + 50 * Math.sin((lightbeamnext.normal + 180) * Math.PI / 180);
-                    ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
-                    ctx.lineTo(normal_x, normal_y);
-
-                    ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
-
-                    //make the angle of the normal
-
-                    if (lightbeamnext.normal > lightbeamnext.angleDifference) {
-                        ctx.arc(lightbeamnext.x, lightbeamnext.y, 20, (lightbeamnext.normal + 90 + lightbeamnext.angleDifference) * Math.PI / 180, (lightbeamnext.normal - 180) * Math.PI / 180);
-                    }
-                    else {
-                        ctx.arc(lightbeamnext.x, lightbeamnext.y, 20, (lightbeamnext.normal + 180) * Math.PI / 180, ((lightbeamnext.normal + 90 - lightbeamnext.angleDifference) * Math.PI / 180 ) - Math.PI);
-                    }
-
-                    ctx.strokeStyle = "#0d35ff";
-                    ctx.setLineDash([]);
+                    ctx.moveTo(lamp.lightPointer_x, lamp.lightPointer_y);
+                    ctx.lineTo(lightbeamnext.x, lightbeamnext.y);
+                    ctx.strokeStyle = hex;
                     ctx.stroke();
+
+                    //add the angle of the lightbeam
+                    lightbeamnext.angle = lamp.rotation;
+
+                    if (user.showNormals) {
+                        //make dotted line
+                        ctx.beginPath();
+                        let normal_x = lightbeamnext.x + 50 * Math.cos((lightbeamnext.normal + 180) * Math.PI / 180);
+                        let normal_y =  lightbeamnext.y + 50 * Math.sin((lightbeamnext.normal + 180) * Math.PI / 180);
+                        ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
+                        ctx.lineTo(normal_x, normal_y);
+                        ctx.strokeStyle = "#0d35ff";
+                        ctx.stroke();
+
+                        ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
+
+                        //make the angle of the normal
+
+                        if (lightbeamnext.normal > lightbeamnext.angleDifference) {
+                            ctx.arc(lightbeamnext.x, lightbeamnext.y, 20, degreeToRadians(lightbeamnext.angle + 180), degreeToRadians(lightbeamnext.normal + 180));
+                        }
+                        else {
+                            ctx.arc(lightbeamnext.x, lightbeamnext.y, 20, degreeToRadians(lightbeamnext.normal + 180), degreeToRadians(lightbeamnext.angle + 180));
+                        }
+
+                        ctx.stroke();
+                    }
+
+                    lb.lightbeam.push(lightbeamnext);
                 }
-
-                lb.lightbeam.push(lightbeamnext);
-
-
             }
-        }
+        });
     });
 }
 
