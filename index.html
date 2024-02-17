@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+    <script src="UserEvents.js"></script>
+    <script src="utils.js"></script>
+</head>
+
+<body style="height: 10000px">
+<canvas id="canvas" width="500" height="500"></canvas>
+
+<script src="js.js"></script>
+<script defer>
+    window.onload = function() {
+        var canvas = document.getElementById("canvas");
+
+        canvas.width = window.innerWidth - 10;
+        canvas.height = window.innerHeight - 10;
+        WIDTH = canvas.width;
+        HEIGHT = canvas.height;
+
+        redraw();
+    };
+</script>
+</body>
+</html>
