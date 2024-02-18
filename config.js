@@ -17,26 +17,28 @@ shapes.push({
     points: []
 });
 
-// shapes.push({
-//     type: "triangle",
-//     x: 250,
-//     y: 100,
-//     rotation: 0, //in degrees
-//     width: 100,
-//     height: 100,
-//     fill: false,
-//     isDragging: false,
-//     points: [],
-//
-//     //physics data
-//     refractive_index : 1.5, //glass refractive
-// });
+shapes.push({
+    type: "triangle",
+    x: 250,
+    y: 100,
+    rotation: 0.01, //in degrees
+    width: 100,
+    height: 100,
+    equilateral: true,
+    sideLength: 100,
+    fill: false,
+    isDragging: false,
+    points: [],
+
+    //physics data
+    refractive_index : 1.5, //glass refractive
+});
 
 shapes.push({
     type: "square",
     x: 275,
     y: 300,
-    rotation: 1e-9, //in degrees
+    rotation: 0.01, //in degrees
     width: 100,
     height: 100,
     fill: false,
@@ -67,6 +69,7 @@ let user = {
     mouseX: 0,
     mouseY: 0,
     showNormals: true,
+    showDebug: true,
     maxLightCalculations: 2,
     shapesColor: "#000000",
     air_refractive_index: 1,

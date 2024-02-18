@@ -58,24 +58,48 @@ function rect(t) {
 //draw a single triangle
 function triangle(t) {
 
-    //make it rotate
-    const newCoords = rotateShape([{ x: t.x, y: t.y + t.height }, { x: t.x + t.width / 2, y: t.y }, { x: t.x + t.width, y: t.y + t.height }], t.rotation);
+    //if the triangle is equilateral
+    if (t.equilateral) {
+        let sideLength = t.sideLength;
+        let height = Math.sqrt(3) / 2 * sideLength;
 
-    ctx.fillStyle = user.shapesColor;
-    ctx.beginPath();
-    ctx.moveTo(newCoords[0].x, newCoords[0].y);
-    ctx.lineTo(newCoords[1].x, newCoords[1].y);
-    ctx.lineTo(newCoords[2].x, newCoords[2].y);
-    ctx.closePath();
-    if (t.fill)
-        ctx.fill();
-    else
-    {
-        ctx.strokeStyle = user.shapesColor;
-        ctx.stroke();
+        const newCoords = rotateShape([{ x: t.x, y: t.y + height }, { x: t.x + sideLength / 2, y: t.y }, { x: t.x + sideLength, y: t.y + height }], t.rotation);
+
+        ctx.fillStyle = user.shapesColor;
+        ctx.beginPath();
+        ctx.moveTo(newCoords[0].x, newCoords[0].y);
+        ctx.lineTo(newCoords[1].x, newCoords[1].y);
+        ctx.lineTo(newCoords[2].x, newCoords[2].y);
+        ctx.closePath();
+        if (t.fill)
+            ctx.fill();
+        else
+        {
+            ctx.strokeStyle = user.shapesColor;
+            ctx.stroke();
+        }
+
+        t.points = newCoords;
     }
+    else {
+        const newCoords = rotateShape([{ x: t.x, y: t.y + t.height }, { x: t.x + t.width, y: t.y + t.height }, { x: t.x + t.width, y: t.y }], t.rotation);
 
-    t.points = newCoords;
+        ctx.fillStyle = user.shapesColor;
+        ctx.beginPath();
+        ctx.moveTo(newCoords[0].x, newCoords[0].y);
+        ctx.lineTo(newCoords[1].x, newCoords[1].y);
+        ctx.lineTo(newCoords[2].x, newCoords[2].y);
+        ctx.closePath();
+        if (t.fill)
+            ctx.fill();
+        else
+        {
+            ctx.strokeStyle = user.shapesColor;
+            ctx.stroke();
+        }
+
+        t.points = newCoords;
+    }
 }
 
 
@@ -117,13 +141,6 @@ function drawLight() {
                     lamp.rotation %= 360;
                     const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToRadians(lamp.rotation));
 
-                    //the normal needs to be between 0 and 360
-                    lightbeamnext.normal = lightbeamnext.normal % 360;
-                    if (lightbeamnext.normal < 1e-9) lightbeamnext.normal = 0;
-                    lightbeamnext.normal -= 180;
-
-                    lightbeamnext.angleDifference = Math.abs(lamp.rotation - lightbeamnext.normal);
-
                     ctx.beginPath();
                     ctx.moveTo(lamp.lightPointer_x, lamp.lightPointer_y);
                     ctx.lineTo(lightbeamnext.x, lightbeamnext.y);
@@ -134,26 +151,25 @@ function drawLight() {
                     lightbeamnext.angle = lamp.rotation;
 
                     if (user.showNormals) {
-                        //make dotted line
+                        let normal = lightbeamnext.normal;
+
+                        if (normal === undefined) return;
+                        let angle = Math.atan2(normal.y2 - normal.y1, normal.x2 - normal.x1) * 180 / Math.PI;
+
                         ctx.beginPath();
-                        let normal_x = lightbeamnext.x + 50 * Math.cos((lightbeamnext.normal + 180) * Math.PI / 180);
-                        let normal_y =  lightbeamnext.y + 50 * Math.sin((lightbeamnext.normal + 180) * Math.PI / 180);
+                        ctx.setLineDash([15, 5]);
                         ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
-                        ctx.lineTo(normal_x, normal_y);
+                        ctx.lineTo(lightbeamnext.x + 50 * Math.cos(degreeToRadians(angle)), lightbeamnext.y + 50 * Math.sin(degreeToRadians(angle)));
                         ctx.strokeStyle = "#0d35ff";
                         ctx.stroke();
+                        ctx.setLineDash([]);
 
-                        ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
+                        let counterClockwise = angleBetween(degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180)) > 90;
 
-                        //make the angle of the normal
-
-                        if (lightbeamnext.normal > lightbeamnext.angleDifference) {
-                            ctx.arc(lightbeamnext.x, lightbeamnext.y, 20, degreeToRadians(lightbeamnext.angle + 180), degreeToRadians(lightbeamnext.normal + 180));
-                        }
-                        else {
-                            ctx.arc(lightbeamnext.x, lightbeamnext.y, 20, degreeToRadians(lightbeamnext.normal + 180), degreeToRadians(lightbeamnext.angle + 180));
-                        }
-
+                        //make a arc from the normal to the lightbeam (shortest distance)
+                        ctx.beginPath();
+                        ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
+                        ctx.strokeStyle = "#0d35ff";
                         ctx.stroke();
                     }
 
@@ -170,12 +186,10 @@ function nextHit(x, y, direction) {
     let minDistance = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT);
     let nextShape = null;
 
-    console.log(radiansToDegrees(direction))
-
     //calculate the next x and y without any intersection
     //direction is the angle in radians
-    let nextX = x + WIDTH * Math.cos(direction);
-    let nextY = y + WIDTH * Math.sin(direction);
+    let nextX = x + 10000 * Math.cos(direction);
+    let nextY = y + 10000 * Math.sin(direction);
     let nextNormal = 0;
 
     for (let i = 0; i < shapes.length; i++) {
@@ -230,22 +244,31 @@ function lineIntersect(x1, y1, direction, points) {
         if (intersection != null) {
             intersections.push(intersection);
 
-            let angle = (y3 - y2) / (x3 - x2);
-            if (angle === Number.POSITIVE_INFINITY) angle = 90;
-            else if (angle === Number.NEGATIVE_INFINITY) angle = 270;
-            else angle = radiansToDegrees(Math.atan(angle));
+            //get the middel of the line
+            let middle_x = (x2 + x3) / 2;
+            let middle_y = (y2 + y3) / 2;
 
-            // //check if the normal is pointing in the right direction (towards the light)
-            // let normal = (angle + 90) % 360;
-            // let angleDifference = Math.abs(normal - direction_YToDegree(direction));
-            // if (angleDifference > 180) angleDifference = 360 - angleDifference;
-            // if (angleDifference > 90) angle = (angle + 180) % 360;
-            // angle += 180;
+            //make 2 lines, inward and outward
+            let center = GetCenterFromPoints(points);
+            let normal = Math.atan2(center.y - middle_y, center.x - middle_x) * 180 / Math.PI;
 
-            intersection.normal = angle + 90;
+            let normal_x1 = (x2 + x3) / 2;
+            let normal_y1 = (y2 + y3) / 2;
+            let normal_x2 = normal_x1 + 20 * Math.cos((normal + 180) * Math.PI / 180);
+            let normal_y2 = normal_y1 + 20 * Math.sin((normal + 180) * Math.PI / 180);
+            intersection.normal = { x1: normal_x1, y1: normal_y1, x2: normal_x2, y2: normal_y2};
 
-            //if intersection.normal is very small, then set it to 0
-            if (intersection.normal < 1e-9) intersection.normal = 0;
+            //draw the normal
+
+            if (user.showDebug) {
+                ctx.beginPath();
+                ctx.moveTo(middle_x, middle_y);
+                ctx.lineTo(normal_x2, normal_y2);
+                ctx.strokeStyle = "#00ff00";
+                ctx.stroke();
+
+                //direction of the normal: [point] + [cos(normal), sin(normal)] * 20 //20 is the length of the normal
+            }
         }
     }
 
@@ -298,4 +321,18 @@ function angleBetween(startRadius, endRadius) {
     const angle = endRadius - startRadius;
     if (angle < 0) return 360 + angle;
     return angle;
+}
+
+function GetCenterFromPoints(points) {
+    const center = {
+        x: 0,
+        y: 0,
+    };
+    for (const point of points) {
+        center.x += point.x;
+        center.y += point.y;
+    }
+    center.x /= points.length;
+    center.y /= points.length;
+    return center;
 }

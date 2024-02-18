@@ -12,3 +12,5 @@
     - ik ben begonnen met de berekeningen van light refraction  
 - 17-2-2024 16:09 : (+120 minuten)
     - Added multi-lamp functionality, finally reworked the angle systems. but i paved the road to more work.... :)
+- 18-2-2024 18:43 (+20 minuten)
+  - even een tyfus bende aan code opgeruimd, nu is het weer overzichtelijk :)
