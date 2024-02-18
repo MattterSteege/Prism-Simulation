@@ -9,21 +9,7 @@ shapes.push({
     y: 100,
     lightPointer_x: 0,
     lightPointer_y: 0,
-    rotation: -45, //in degrees
-    width: 90,
-    height: 30,
-    fill: true,
-    isDragging: false,
-    points: []
-});
-
-shapes.push({
-    type: "lamp",
-    x: 210,
-    y: 100,
-    lightPointer_x: 0,
-    lightPointer_y: 0,
-    rotation: 45, //in degrees
+    rotation: 80, //in degrees
     width: 90,
     height: 30,
     fill: true,
@@ -50,7 +36,7 @@ shapes.push({
     type: "square",
     x: 275,
     y: 300,
-    rotation: 0, //in degrees
+    rotation: 1e-9, //in degrees
     width: 100,
     height: 100,
     fill: false,
@@ -80,7 +66,7 @@ lightBeams.push({
 let user = {
     mouseX: 0,
     mouseY: 0,
-    showNormals: false,
+    showNormals: true,
     maxLightCalculations: 2,
     shapesColor: "#000000",
     air_refractive_index: 1,

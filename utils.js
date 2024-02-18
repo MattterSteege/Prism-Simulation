@@ -51,7 +51,6 @@ function degreeToRadians(angle) {
 function radiansToDegrees(angle) {
     return angle * 180 / Math.PI;
 }
-
 //================================================================
 // WaveLength to Hex
 //================================================================

@@ -114,7 +114,8 @@ function drawLight() {
 
             for (let i = 0; i < user.maxLightCalculations; i++) {
                 if (i === 0) {
-                    const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToDirection_Y(lamp.rotation));
+                    lamp.rotation %= 360;
+                    const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToRadians(lamp.rotation));
 
                     //the normal needs to be between 0 and 360
                     lightbeamnext.normal = lightbeamnext.normal % 360;
@@ -169,10 +170,12 @@ function nextHit(x, y, direction) {
     let minDistance = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT);
     let nextShape = null;
 
+    console.log(radiansToDegrees(direction))
+
     //calculate the next x and y without any intersection
-    //direction is the slope of the line (per 1 in x, how much does the y change)
-    let nextX = x + WIDTH;
-    let nextY = y + direction * WIDTH;
+    //direction is the angle in radians
+    let nextX = x + WIDTH * Math.cos(direction);
+    let nextY = y + WIDTH * Math.sin(direction);
     let nextNormal = 0;
 
     for (let i = 0; i < shapes.length; i++) {
@@ -211,9 +214,9 @@ function nextHit(x, y, direction) {
 
 //x1: is the x coordinate of the starting point
 //y1: is the y coordinate of the starting point
-//direction_y: is the y meaning for every 1 in x, how much does the y change
+//direction: is the angle in radians
 //array of points: is the array of points that define the shape
-function lineIntersect(x1, y1, direction_y, points) {
+function lineIntersect(x1, y1, direction, points) {
     let intersections = [];
     for (let i = 0; i < points.length; i++) {
         let x2 = points[i].x;
@@ -223,21 +226,21 @@ function lineIntersect(x1, y1, direction_y, points) {
 
 
 
-        let intersection = lineIntersect2(x1, y1, direction_y, x2, y2, x3, y3);
+        let intersection = lineIntersect2(x1, y1, direction, x2, y2, x3, y3);
         if (intersection != null) {
             intersections.push(intersection);
 
             let angle = (y3 - y2) / (x3 - x2);
             if (angle === Number.POSITIVE_INFINITY) angle = 90;
             else if (angle === Number.NEGATIVE_INFINITY) angle = 270;
-            else angle = direction_YToDegree(angle);
+            else angle = radiansToDegrees(Math.atan(angle));
 
-            //check if the normal is pointing in the right direction (towards the light)
-            let normal = (angle + 90) % 360;
-            let angleDifference = Math.abs(normal - direction_YToDegree(direction_y));
-            if (angleDifference > 180) angleDifference = 360 - angleDifference;
-            if (angleDifference > 90) angle = (angle + 180) % 360;
-            angle += 180;
+            // //check if the normal is pointing in the right direction (towards the light)
+            // let normal = (angle + 90) % 360;
+            // let angleDifference = Math.abs(normal - direction_YToDegree(direction));
+            // if (angleDifference > 180) angleDifference = 360 - angleDifference;
+            // if (angleDifference > 90) angle = (angle + 180) % 360;
+            // angle += 180;
 
             intersection.normal = angle + 90;
 
@@ -261,49 +264,28 @@ function lineIntersect(x1, y1, direction_y, points) {
     return minIntersection;
 }
 
-function lineIntersect2(x1, y1, direction_y, x2, y2, x3, y3) {
-    // Handle vertical line case
-    if (Math.abs(x3 - x2) < Number.EPSILON) {
-        x3 += 1e-9;
+function lineIntersect2(x1, y1, direction, x2, y2, x3, y3) {
+    // Calculate slopes of the two lines
+    const m1 = Math.tan(direction);
+    const m2 = (y3 - y2) / (x3 - x2);
+
+    // Check if the slopes are not equal (lines are not parallel)
+    if (m1 !== m2) {
+        // Calculate the intersection point
+        const xIntersect = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
+        const yIntersect = m1 * (xIntersect - x1) + y1;
+
+        // Check if the intersection point lies on the vector (x2, y2) to (x3, y3)
+        if (
+            (xIntersect >= Math.min(x2, x3) && xIntersect <= Math.max(x2, x3)) &&
+            (yIntersect >= Math.min(y2, y3) && yIntersect <= Math.max(y2, y3))
+        ) {
+            return { x: xIntersect, y: yIntersect, intersects: true };
+        }
     }
 
-    // lines are not parallel
-    let x4 = x1 + WIDTH;
-    let y4 = y1 + direction_y * WIDTH;
-
-    // calculate slopes and intercepts
-    let a1 = (y4 - y1) / (x4 - x1);
-    let b1 = y1 - a1 * x1;
-
-    let a2, b2;
-
-    // Handle vertical line case
-    if (Math.abs(x3 - x2) < Number.EPSILON) {
-        a2 = Number.MAX_VALUE;
-        b2 = -Number.MAX_VALUE;
-    } else {
-        a2 = (y3 - y2) / (x3 - x2);
-        b2 = y2 - a2 * x2;
-    }
-
-    if (Math.abs(a1 - a2) < Number.EPSILON) return null; // lines are parallel
-
-    // calculate the intersection
-    let x = (b2 - b1) / (a1 - a2);
-    let y = a1 * x + b1;
-
-    // check if the intersection is within the boundaries of the line
-    if (x < Math.min(x2, x3) || x > Math.max(x2, x3)) return null;
-    if (y < Math.min(y2, y3) || y > Math.max(y2, y3)) return null;
-
-    // check if the direction of the line is still the same
-    if (direction_y > 0 && y < y1) return null;
-    if (direction_y < 0 && y > y1) return null;
-
-    return {
-        x: x,
-        y: y,
-    };
+    // Lines are either parallel or do not intersect
+    return { intersects: false };
 }
 
 function calculateNextAngle(normal, lastRefractiveIndex, currentRefractiveIndex, wavelength, angleOfAttack) {
