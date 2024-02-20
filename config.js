@@ -5,11 +5,11 @@ const shapes = [];
 
 shapes.push({
     type: "lamp",
-    x: 10,
-    y: 100,
+    x: 15,
+    y: 500,
     lightPointer_x: 0,
     lightPointer_y: 0,
-    rotation: 80, //in degrees
+    rotation: 0, //in degrees
     width: 90,
     height: 30,
     fill: true,
@@ -17,28 +17,28 @@ shapes.push({
     points: []
 });
 
-shapes.push({
-    type: "triangle",
-    x: 250,
-    y: 100,
-    rotation: 0.01, //in degrees
-    width: 100,
-    height: 100,
-    equilateral: true,
-    sideLength: 100,
-    fill: false,
-    isDragging: false,
-    points: [],
-
-    //physics data
-    refractive_index : 1.5, //glass refractive
-});
+// shapes.push({
+//     type: "triangle",
+//     x: 250,
+//     y: 100,
+//     rotation: 0.01, //in degrees
+//     width: 100,
+//     height: 100,
+//     equilateral: true,
+//     sideLength: 100,
+//     fill: false,
+//     isDragging: false,
+//     points: [],
+//
+//     //physics data
+//     refractive_index : 1.5, //glass refractive
+// });
 
 shapes.push({
     type: "square",
     x: 275,
-    y: 300,
-    rotation: 0.01, //in degrees
+    y: 500,
+    rotation: 45, //in degrees
     width: 100,
     height: 100,
     fill: false,
@@ -70,7 +70,7 @@ let user = {
     mouseY: 0,
     showNormals: true,
     showDebug: true,
-    maxLightCalculations: 2,
+    maxLightCalculations: 3,
     shapesColor: "#000000",
     air_refractive_index: 1,
 }

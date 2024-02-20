@@ -134,12 +134,12 @@ function drawLight() {
 
         lightBeams.forEach((lb) => {
             var hex = RGBToHex(nmToRGB(lb.wavelength))
+            let nextLightDirection = (lamp.rotation %= 360);
             lb.lightbeam = [];
 
             for (let i = 0; i < user.maxLightCalculations; i++) {
                 if (i === 0) {
-                    lamp.rotation %= 360;
-                    const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToRadians(lamp.rotation));
+                    const lightbeamnext = nextHit(lamp.lightPointer_x, lamp.lightPointer_y, degreeToRadians(nextLightDirection));
 
                     ctx.beginPath();
                     ctx.moveTo(lamp.lightPointer_x, lamp.lightPointer_y);
@@ -149,13 +149,12 @@ function drawLight() {
 
                     //add the angle of the lightbeam
                     lightbeamnext.angle = lamp.rotation;
+                    let normal = lightbeamnext.normal;
+                    if (normal === undefined) return;
+                    let angle = Math.atan2(normal.y2 - normal.y1, normal.x2 - normal.x1) * 180 / Math.PI;
+                    let counterClockwise = angleBetween(degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180)) > 180;
 
                     if (user.showNormals) {
-                        let normal = lightbeamnext.normal;
-
-                        if (normal === undefined) return;
-                        let angle = Math.atan2(normal.y2 - normal.y1, normal.x2 - normal.x1) * 180 / Math.PI;
-
                         ctx.beginPath();
                         ctx.setLineDash([15, 5]);
                         ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
@@ -164,9 +163,7 @@ function drawLight() {
                         ctx.stroke();
                         ctx.setLineDash([]);
 
-                        let counterClockwise = angleBetween(degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180)) > 90;
-
-                        //make a arc from the normal to the lightbeam (shortest distance)
+                        //make an arc from the normal to the lightbeam (shortest distance)
                         ctx.beginPath();
                         ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
                         ctx.strokeStyle = "#0d35ff";
@@ -174,7 +171,77 @@ function drawLight() {
                     }
 
                     lb.lightbeam.push(lightbeamnext);
+
+                    //log in degree it needs to be the same as thius: ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
+                    let start = angle;
+                    let end = lightbeamnext.angle - 180;
+                    let angleBetweenLines = end - start;
+                    if (counterClockwise)
+                        angleBetweenLines = 360 - angleBetweenLines;
+                    angleBetweenLines %= 360;
+
+                    console.log(angle, lightbeamnext.angle - 180, angleBetweenLines);
+                    let lastRefractiveIndex = lb.current_refractive_index;
+                    let NextRefractiveIndex = lightbeamnext.shape.refractive_index;
+                    let wavelength = lb.wavelength;
+                    let angleOfAttack = angleBetweenLines;
+
+                    let nextAngle = Math.asin(lastRefractiveIndex * Math.sin(degreeToRadians(angleOfAttack)) / NextRefractiveIndex);
+                    nextLightDirection = radiansToDegrees(nextAngle);
+
+                    continue;
                 }
+
+                const lightbeamnext = nextHit(lb.lightbeam[i - 1].x, lb.lightbeam[i - 1].y, degreeToRadians(nextLightDirection));
+                console.log(lightbeamnext);
+                ctx.beginPath();
+                ctx.moveTo(lb.lightbeam[i - 1].x, lb.lightbeam[i - 1].y);
+                ctx.lineTo(lightbeamnext.x, lightbeamnext.y);
+                ctx.strokeStyle = hex;
+                ctx.stroke();
+
+                //add the angle of the lightbeam
+                lightbeamnext.angle = nextLightDirection;
+                let normal = lightbeamnext.normal;
+                if (normal === undefined) return;
+                let angle = Math.atan2(normal.y2 - normal.y1, normal.x2 - normal.x1) * 180 / Math.PI;
+                let counterClockwise = angleBetween(degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180)) > 180;
+
+                if (user.showNormals) {
+                    ctx.beginPath();
+                    ctx.setLineDash([15, 5]);
+                    ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
+                    ctx.lineTo(lightbeamnext.x + 50 * Math.cos(degreeToRadians(angle)), lightbeamnext.y + 50 * Math.sin(degreeToRadians(angle)));
+                    ctx.strokeStyle = "#0d35ff";
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+
+                    //make a arc from the normal to the lightbeam (shortest distance)
+                    ctx.beginPath();
+                    ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
+                    ctx.strokeStyle = "#0d35ff";
+                    ctx.stroke();
+                }
+
+                //log in degree it needs to be the same as thius: ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
+                let start = angle;
+                let end = lightbeamnext.angle - 180;
+                let angleBetweenLines = end - start;
+                if (counterClockwise)
+                    angleBetweenLines = 360 - angleBetweenLines;
+                angleBetweenLines %= 360;
+
+                console.log(angle, lightbeamnext.angle - 180, angleBetweenLines);
+                let lastRefractiveIndex = lb.current_refractive_index;
+                let NextRefractiveIndex = lightbeamnext.shape.refractive_index;
+                let wavelength = lb.wavelength;
+                let angleOfAttack = angleBetweenLines;
+
+                let nextAngle = Math.asin(lastRefractiveIndex * Math.sin(degreeToRadians(angleOfAttack)) / NextRefractiveIndex);
+                nextLightDirection = radiansToDegrees(nextAngle);
+
+                lb.lightbeam.push(lightbeamnext);
             }
         });
     });
@@ -199,7 +266,7 @@ function nextHit(x, y, direction) {
             let intersection = lineIntersect(x, y, direction, s.points);
             if (intersection != null) {
                 let distance = Math.sqrt((x - intersection.x) * (x - intersection.x) + (y - intersection.y) * (y - intersection.y));
-                if (distance < minDistance) {
+                if (distance < minDistance && distance > 0.001) {
                     minDistance = distance;
                     nextShape = s;
                     nextX = intersection.x;
@@ -241,7 +308,8 @@ function lineIntersect(x1, y1, direction, points) {
 
 
         let intersection = lineIntersect2(x1, y1, direction, x2, y2, x3, y3);
-        if (intersection != null) {
+
+        if (intersection !== null) {
             intersections.push(intersection);
 
             //get the middel of the line
@@ -309,12 +377,6 @@ function lineIntersect2(x1, y1, direction, x2, y2, x3, y3) {
 
     // Lines are either parallel or do not intersect
     return { intersects: false };
-}
-
-function calculateNextAngle(normal, lastRefractiveIndex, currentRefractiveIndex, wavelength, angleOfAttack) {
-    const angleOfIncidence = normal - angleOfAttack;
-    const angleOfRefraction = Math.asin(lastRefractiveIndex * Math.sin(angleOfIncidence) / currentRefractiveIndex);
-    return angleOfRefraction * 180 / Math.PI;
 }
 
 function angleBetween(startRadius, endRadius) {

@@ -14,3 +14,5 @@
     - Added multi-lamp functionality, finally reworked the angle systems. but i paved the road to more work.... :)
 - 18-2-2024 18:43 (+20 minuten)
   - even een tyfus bende aan code opgeruimd, nu is het weer overzichtelijk :)
+- 19-2-2024 9:45 (+45 minuten)
+  - De eerste refractie berekeningen werken nu,maar de tweede, derde etc nog niet.
