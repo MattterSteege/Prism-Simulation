@@ -16,3 +16,6 @@
   - even een tyfus bende aan code opgeruimd, nu is het weer overzichtelijk :)
 - 19-2-2024 9:45 (+45 minuten)
   - De eerste refractie berekeningen werken nu,maar de tweede, derde etc nog niet.
+- 20-2-2024 17:56 (+50 minuten)
+  - De berekening van de 2 snijdende lijnen werkt nu stabieler
+  - 2e, 3e, 4e etc. refractie werkt nu ook (in de chrome console kan je `user.maxLightCalculations = [nummer tussen 0 en ∞]`)
