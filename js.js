@@ -24,6 +24,8 @@ window.onscroll = myRotate;
 
 
 function redraw() {
+    if (!user.showDebug) console.clear()
+
     draw();
     drawLight();
 }
@@ -136,6 +138,7 @@ function drawLight() {
             var hex = RGBToHex(nmToRGB(lb.wavelength))
             let nextLightDirection = (lamp.rotation %= 360);
             lb.lightbeam = [];
+            lb.insidePrism = false;
 
             for (let i = 0; i < user.maxLightCalculations; i++) {
                 if (i === 0) {
@@ -180,20 +183,23 @@ function drawLight() {
                         angleBetweenLines = 360 - angleBetweenLines;
                     angleBetweenLines %= 360;
 
-                    console.log(angle, lightbeamnext.angle - 180, angleBetweenLines);
                     let lastRefractiveIndex = lb.current_refractive_index;
                     let NextRefractiveIndex = lightbeamnext.shape.refractive_index;
-                    let wavelength = lb.wavelength;
                     let angleOfAttack = angleBetweenLines;
 
                     let nextAngle = Math.asin(lastRefractiveIndex * Math.sin(degreeToRadians(angleOfAttack)) / NextRefractiveIndex);
                     nextLightDirection = radiansToDegrees(nextAngle);
 
+                    lb.insidePrism = !lb.insidePrism;
+
                     continue;
                 }
 
-                const lightbeamnext = nextHit(lb.lightbeam[i - 1].x, lb.lightbeam[i - 1].y, degreeToRadians(nextLightDirection));
-                console.log(lightbeamnext);
+                const NextX = lb.lightbeam[i - 1].x + 1e-9 * Math.cos(degreeToRadians(nextLightDirection));
+                const NextY = lb.lightbeam[i - 1].y + 1e-9 * Math.sin(degreeToRadians(nextLightDirection));
+
+                const lightbeamnext = nextHit(NextX, NextY, degreeToRadians(nextLightDirection));
+
                 ctx.beginPath();
                 ctx.moveTo(lb.lightbeam[i - 1].x, lb.lightbeam[i - 1].y);
                 ctx.lineTo(lightbeamnext.x, lightbeamnext.y);
@@ -207,7 +213,15 @@ function drawLight() {
                 let angle = Math.atan2(normal.y2 - normal.y1, normal.x2 - normal.x1) * 180 / Math.PI;
                 let counterClockwise = angleBetween(degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180)) > 180;
 
+
                 if (user.showNormals) {
+                    if (lb.insidePrism) {
+                        if (counterClockwise) {
+                            angle += 180;
+                        }
+
+                    }
+
                     ctx.beginPath();
                     ctx.setLineDash([15, 5]);
                     ctx.moveTo(lightbeamnext.x, lightbeamnext.y);
@@ -216,13 +230,14 @@ function drawLight() {
                     ctx.stroke();
                     ctx.setLineDash([]);
 
-
-                    //make a arc from the normal to the lightbeam (shortest distance)
+                    //make an arc from the normal to the lightbeam (shortest distance)
                     ctx.beginPath();
-                    ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
+                    ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), !counterClockwise);
                     ctx.strokeStyle = "#0d35ff";
                     ctx.stroke();
                 }
+
+                lb.lightbeam.push(lightbeamnext);
 
                 //log in degree it needs to be the same as thius: ctx.arc(lightbeamnext.x, lightbeamnext.y, 50, degreeToRadians(angle), degreeToRadians(lightbeamnext.angle - 180), counterClockwise);
                 let start = angle;
@@ -232,16 +247,12 @@ function drawLight() {
                     angleBetweenLines = 360 - angleBetweenLines;
                 angleBetweenLines %= 360;
 
-                console.log(angle, lightbeamnext.angle - 180, angleBetweenLines);
                 let lastRefractiveIndex = lb.current_refractive_index;
                 let NextRefractiveIndex = lightbeamnext.shape.refractive_index;
-                let wavelength = lb.wavelength;
                 let angleOfAttack = angleBetweenLines;
 
                 let nextAngle = Math.asin(lastRefractiveIndex * Math.sin(degreeToRadians(angleOfAttack)) / NextRefractiveIndex);
                 nextLightDirection = radiansToDegrees(nextAngle);
-
-                lb.lightbeam.push(lightbeamnext);
             }
         });
     });
@@ -307,7 +318,7 @@ function lineIntersect(x1, y1, direction, points) {
 
 
 
-        let intersection = lineIntersect2(x1, y1, direction, x2, y2, x3, y3);
+        let intersection = lineIntersect2(x1, y1, x1 + 10000 * Math.cos(direction), y1 + 10000 * Math.sin(direction), x2, y2, x3, y3);
 
         if (intersection !== null) {
             intersections.push(intersection);
@@ -334,8 +345,6 @@ function lineIntersect(x1, y1, direction, points) {
                 ctx.lineTo(normal_x2, normal_y2);
                 ctx.strokeStyle = "#00ff00";
                 ctx.stroke();
-
-                //direction of the normal: [point] + [cos(normal), sin(normal)] * 20 //20 is the length of the normal
             }
         }
     }
@@ -355,27 +364,37 @@ function lineIntersect(x1, y1, direction, points) {
     return minIntersection;
 }
 
-function lineIntersect2(x1, y1, direction, x2, y2, x3, y3) {
-    // Calculate slopes of the two lines
-    const m1 = Math.tan(direction);
-    const m2 = (y3 - y2) / (x3 - x2);
+//checks if (x1, y1) to (x2, y2) intersects with (x3, y3) to (x4, y4)
+function lineIntersect2(x1, y1, x2, y2, x3, y3, x4, y4) {
 
-    // Check if the slopes are not equal (lines are not parallel)
-    if (m1 !== m2) {
-        // Calculate the intersection point
-        const xIntersect = (m1 * x1 - m2 * x2 + y2 - y1) / (m1 - m2);
-        const yIntersect = m1 * (xIntersect - x1) + y1;
-
-        // Check if the intersection point lies on the vector (x2, y2) to (x3, y3)
-        if (
-            (xIntersect >= Math.min(x2, x3) && xIntersect <= Math.max(x2, x3)) &&
-            (yIntersect >= Math.min(y2, y3) && yIntersect <= Math.max(y2, y3))
-        ) {
-            return { x: xIntersect, y: yIntersect, intersects: true };
-        }
+    function isBetween(value, a, b) {
+        return value >= Math.min(a, b) && value <= Math.max(a, b);
     }
 
-    // Lines are either parallel or do not intersect
+
+    // Calculate the slopes of the lines
+    let m1 = (y2 - y1) / (x2 - x1);
+    let m2 = (y4 - y3) / (x4 - x3);
+
+    // Check if the lines are parallel
+    if (m1 === m2) {
+        return { intersects: false };
+    }
+
+    // Calculate the intersection point
+    let intersectionX = (m1 * x1 - m2 * x3 + y3 - y1) / (m1 - m2);
+    let intersectionY = m1 * (intersectionX - x1) + y1;
+
+    // Check if the intersection point is within the line segments
+    if (
+        isBetween(intersectionX, x1, x2) &&
+        isBetween(intersectionY, y1, y2) &&
+        isBetween(intersectionX, x3, x4) &&
+        isBetween(intersectionY, y3, y4)
+    ) {
+        return { x: intersectionX, y: intersectionY, intersects: true };
+    }
+
     return { intersects: false };
 }
 

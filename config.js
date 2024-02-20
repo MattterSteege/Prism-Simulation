@@ -17,27 +17,27 @@ shapes.push({
     points: []
 });
 
-// shapes.push({
-//     type: "triangle",
-//     x: 250,
-//     y: 100,
-//     rotation: 0.01, //in degrees
-//     width: 100,
-//     height: 100,
-//     equilateral: true,
-//     sideLength: 100,
-//     fill: false,
-//     isDragging: false,
-//     points: [],
-//
-//     //physics data
-//     refractive_index : 1.5, //glass refractive
-// });
+shapes.push({
+    type: "triangle",
+    x: 275,
+    y: 465,
+    rotation: 0.01, //in degrees
+    width: 100,
+    height: 100,
+    equilateral: true,
+    sideLength: 100,
+    fill: false,
+    isDragging: false,
+    points: [],
+
+    //physics data
+    refractive_index : 1.5, //glass refractive
+});
 
 shapes.push({
     type: "square",
     x: 275,
-    y: 500,
+    y: 100,
     rotation: 45, //in degrees
     width: 100,
     height: 100,
@@ -57,6 +57,8 @@ const lightBeams = [];
 lightBeams.push({
     lightbeam: [],
 
+    insidePrism: false,
+
     current_refractive_index: 1, //air refractive
 
     wavelength: 687, //in nm
@@ -68,9 +70,9 @@ lightBeams.push({
 let user = {
     mouseX: 0,
     mouseY: 0,
-    showNormals: true,
+    showNormals: false,
     showDebug: true,
-    maxLightCalculations: 3,
+    maxLightCalculations: 5,
     shapesColor: "#000000",
-    air_refractive_index: 1,
+    global_refractive_index: 1,
 }
