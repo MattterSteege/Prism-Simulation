@@ -24,10 +24,8 @@ function CanvasState(canvas) {
 
     this.valid = false; // when set to false, the canvas will redraw everything
     this.shapes = [];  // the collection of things to be drawn
-    this.lights = [];  // the collection of light sources
+    this.rays = [];  // the collection of ray sources
     this.dragging = false; // Keep track of when we are dragging
-    // the current selected object. In the future we could turn this into an array for multiple selection
-    this.selection = null;
     this.dragoffx = 0; // See mousedown and mousemove events for explanation
     this.dragoffy = 0;
 
@@ -40,8 +38,6 @@ function CanvasState(canvas) {
     // This is our reference!
     var myState = this;
 
-    //fixes a problem where double clicking causes text to get selected on the canvas
-    canvas.addEventListener('selectstart', function(e) { e.preventDefault(); return false; }, false);
     // Up, down, and move are for dragging
     canvas.addEventListener('mousedown', function(e) {
         var mouse = myState.getMouse(e);
@@ -63,6 +59,23 @@ function CanvasState(canvas) {
                 return;
             }
         }
+
+        var rays = myState.rays;
+        var l = rays.length;
+        for (var i = l-1; i >= 0; i--) {
+            if (rays[i].contains(mx, my)) {
+                var mySel = rays[i];
+                // Keep track of where in the object we clicked
+                // so we can move it smoothly (see mousemove)
+                myState.dragoffx = mx - mySel.x;
+                myState.dragoffy = my - mySel.y;
+                myState.dragging = true;
+                myState.selection = mySel;
+                myState.valid = false;
+                return;
+            }
+        }
+
         // havent returned means we have failed to select anything.
         // If there was an object selected, we deselect it
         if (myState.selection) {
@@ -78,47 +91,25 @@ function CanvasState(canvas) {
             // from where we clicked. Thats why we saved the offset and use it here
             myState.selection.x = mouse.x - myState.dragoffx;
             myState.selection.y = mouse.y - myState.dragoffy;
+
             myState.valid = false; // Something's dragging so we must redraw
         }
     }, true);
     canvas.addEventListener('mouseup', function(e) {
         myState.dragging = false;
     }, true);
-    canvas.addEventListener('dblclick', function(e) {
-        var mouse = myState.getMouse(e);
-        var mx = mouse.x;
-        var my = mouse.y;
-        var shapes = myState.shapes;
-        var l = shapes.length;
-        for (var i = l-1; i >= 0; i--) {
-            if (shapes[i].contains(mx, my)) {
-                var mySel = shapes[i];
-                // Keep track of where in the object we clicked
-                // so we can move it smoothly (see mousemove)
-                myState.selection = mySel;
-                mySel.double();
-                myState.valid = false;
-                return;
-            }
-        }
-        // havent returned means we have failed to select anything.
-        // If there was an object selected, we deselect it
-        if (myState.selection) {
-            myState.selection = null;
-            myState.valid = false; // Need to clear the old selection border
-        }
-    }, true);
 
-    // **** Options! ****
-
-    this.selectionColor = '';
-    this.selectionWidth = 0;
-    this.interval = 30;
+    this.interval = 10;
     setInterval(function() { myState.draw(); }, myState.interval);
 }
 
 CanvasState.prototype.addShape = function(shape) {
     this.shapes.push(shape);
+    this.valid = false;
+}
+
+CanvasState.prototype.addRay = function(ray) {
+    this.rays.push(ray);
     this.valid = false;
 }
 
@@ -147,15 +138,13 @@ CanvasState.prototype.draw = function() {
             shapes[i].draw(ctx);
         }
 
-        // draw selection
-        // right now this is just a stroke along the edge of the selected Shape
-        if (this.selection != null) {
-            /*
-            ctx.strokeStyle = this.selectionColor;
-            ctx.lineWidth = this.selectionWidth;*/
-            var mySel = this.selection;
-            mySel.stroke(ctx, this.selectionColor, this.selectionWidth)
-            //ctx.strokeRect(mySel.x,mySel.y,mySel.w,mySel.h);
+        // calulate the ray
+        var rays = this.rays;
+        var l = rays.length;
+        for (var i = 0; i < l; i++) {
+            var ray = rays[i];
+            ray.draw(ctx);
+            ray.calculateRay(shapes);
         }
 
         // ** Add stuff you want drawn on top all the time here **
@@ -195,20 +184,8 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(125,80,90, true, 'rgba(245, 222, 179, .7)'));
-    s.addShape(new Lightbeam(100, 100, 0, 687))
-}
-function addRectangle() {
-    s.addShape(new Rectangle(0,0,50,50));
-}
-function addCircle() {
-    s.addShape(new Circle(0,0, 30));
-}
-function addText() {
-    var cont = document.getElementById('textbox').value;
-    s.addShape(new Text(100,100, '20pt Calibri', 'lightskyblue',cont))
-}
+    s.addShape(new Triangle(250, 50, 100, 'rgba(0,0,255,0.5)'));
+    //s.addShape(new Rectangle(250, 50, 100, 100, 'rgba(255,165,0,0.5)'))
 
-function addLight() {
-    s.addShape(new Lightbeam(100, 100, 0, 1000))
+    s.addRay(new Ray(100, 100, 0, 687))
 }

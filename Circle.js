@@ -9,6 +9,8 @@ function Circle(x, y, w, fill) {
     this.y = y || 0;
     this.w = w || 1;
     this.fill = fill || '#AAAAAA';
+    this.points = [{x: this.x, y: this.y, w: this.w}];
+
 }
 // Draws this shape to a given context
 Circle.prototype.draw = function(ctx) {
@@ -34,8 +36,4 @@ Circle.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     //ctx.strokeRect(this.x,this.y,this.w,this.h)
     this.draw(ctx);
     ctx.stroke();
-}
-
-Circle.prototype.scale = function (factor) {
-    this.w = this.w * factor;
 }

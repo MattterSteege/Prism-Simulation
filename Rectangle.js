@@ -8,6 +8,7 @@ function Rectangle(x, y, w, h, fill) {
     this.w = w || 1;
     this.h = h || 1;
     this.fill = fill || '#AAAAAA';
+    this.points = [{x1: this.x, y1: this.y, x2: this.x + this.w, y2: this.y, x3: this.x + this.w, y3: this.y + this.h, x4: this.x, y4: this.y + this.h}];
 }
 // Draws this shape to a given context
 Rectangle.prototype.draw = function(ctx) {
@@ -29,7 +30,63 @@ Rectangle.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     ctx.strokeRect(this.x,this.y,this.w,this.h)
 }
 
-Rectangle.prototype.scale = function (factor) {
-    this.w= this.w*factor;
-    this.h = this.h*factor;
+Rectangle.prototype.intersectRay = function(ray) {
+    const rectX = this.x;
+    const rectY = this.y;
+    const rectWidth = this.w;
+    const rectHeight = this.h;
+
+    // Calculate the slope of the ray
+    const slope = Math.tan(ray.angleRadians);
+
+    // Calculate the intersection points with the left and right edges of the rectangle
+    const xLeft = rectX;
+    const yLeft = ray.y + (xLeft - ray.x) * slope;
+
+    const xRight = rectX + rectWidth;
+    const yRight = ray.y + (xRight - ray.x) * slope;
+
+    // Calculate the intersection points with the top and bottom edges of the rectangle
+    const yTop = rectY;
+    const xTop = ray.x + (yTop - ray.y) / slope;
+
+    const yBottom = rectY + rectHeight;
+    const xBottom = ray.x + (yBottom - ray.y) / slope;
+
+    // Check if the intersection points are within the rectangle boundaries
+    if (xLeft >= rectX && xLeft <= rectX + rectWidth && yLeft >= rectY && yLeft <= rectY + rectHeight) {
+        return {
+            x: xLeft,
+            y: yLeft,
+            shape: this,
+            distance: Math.sqrt(Math.pow(xLeft - ray.x, 2) + Math.pow(yLeft - ray.y, 2)),
+            normal: {x: -1, y: 0}
+        };
+    } else if (xRight >= rectX && xRight <= rectX + rectWidth && yRight >= rectY && yRight <= rectY + rectHeight) {
+        return {
+            x: xRight,
+            y: yRight,
+            shape: this,
+            distance: Math.sqrt(Math.pow(xRight - ray.x, 2) + Math.pow(yRight - ray.y, 2)),
+            normal: {x: 1, y: 0}
+        };
+    } else if (xTop >= rectX && xTop <= rectX + rectWidth && yTop >= rectY && yTop <= rectY + rectHeight) {
+        return {
+            x: xTop,
+            y: yTop,
+            shape: this,
+            distance: Math.sqrt(Math.pow(xTop - ray.x, 2) + Math.pow(yTop - ray.y, 2)),
+            normal: {x: 0, y: -1}
+        };
+    } else if (xBottom >= rectX && xBottom <= rectX + rectWidth && yBottom >= rectY && yBottom <= rectY + rectHeight) {
+        return {
+            x: xBottom,
+            y: yBottom,
+            shape: this,
+            distance: Math.sqrt(Math.pow(xBottom - ray.x, 2) + Math.pow(yBottom - ray.y, 2)),
+            normal: {x: 0, y: 1}
+        };
+    }
+
+    return null;
 }
