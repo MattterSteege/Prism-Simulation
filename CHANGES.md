@@ -19,3 +19,5 @@
 - 20-2-2024 17:56 (+50 minuten)
   - De berekening van de 2 snijdende lijnen werkt nu stabieler
   - 2e, 3e, 4e etc. refractie werkt nu ook (in de chrome console kan je `user.maxLightCalculations = [nummer tussen 0 en ∞]`)
+- 22-2-2024 9:04 (+120 minuten)
+  - Opnieuw begonnen met de code, nu weet ik hoe de wiskunde werkt en nu kan ik het vanuit de basis goed en geoptimaliseerd opbouwen.

@@ -1,29 +1,18 @@
-<!DOCTYPE html>
-<html lang="nl">
+<html>
 <head>
-    <title>Prism Simulation</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="style.css">
-    <script src="config.js"></script>
-    <script src="UserEvents.js"></script>
+    <title>
+        Licht Breking
+    </title>
     <script src="utils.js"></script>
+    <script src="Shape.js"></script>
+    <script src="Text.js"></script>
+    <script src="Rectangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="LightBeam.js"></script>
 </head>
-
-<body style="height: 10000px">
-<canvas id="canvas" width="500" height="500"></canvas>
-
-<script src="js.js"></script>
-<script defer>
-    window.onload = function() {
-        var canvas = document.getElementById("canvas");
-
-        canvas.width = window.innerWidth - 10;
-        canvas.height = window.innerHeight - 10;
-        WIDTH = canvas.width;
-        HEIGHT = canvas.height;
-
-        redraw();
-    };
-</script>
+<body onload="init()" style="margin: 0; padding: 0;">
+<canvas id="canvas" width="400" height="300">Canvas not supported</canvas>
+    <script src="dragging.js"></script>
 </body>
 </html>
