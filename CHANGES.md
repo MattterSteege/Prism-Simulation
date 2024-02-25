@@ -5,17 +5,17 @@
 - 14-2-2024 17:20 : (+28 minuten)
     - Het draaien van verschillende objecten werkt nu ook.
 - 15-2-2024 17:27 : (+40 minuten)
-    - Nu is het gelukt om met scroll objecten te draaien en de normmaal van de lijn waarop hij raakt te berekenen
+    - Nu is het gelukt om met scroll objecten te draaien en de normaal van de lijn waarop hij raakt te berekenen
 - 16-2-2024 17:04 : (+60 minuten)
-    - buggy dingen oplossen met delen door 0, nu is het klaar om de brekings index te gaan berekenen.
+    - buggy dingen oplossen met delen door 0, nu is het klaar om de brekingsindex te gaan berekenen.
 - 16-2-2024 17:43 : (+40 minuten)
     - ik ben begonnen met de berekeningen van light refraction  
 - 17-2-2024 16:09 : (+120 minuten)
-    - Added multi-lamp functionality, finally reworked the angle systems. but i paved the road to more work.... :)
+    - Added multi-lamp functionality, finally reworked the angle systems. but I paved the road to more work.... :)
 - 18-2-2024 18:43 (+20 minuten)
   - even een tyfus bende aan code opgeruimd, nu is het weer overzichtelijk :)
 - 19-2-2024 9:45 (+45 minuten)
-  - De eerste refractie berekeningen werken nu,maar de tweede, derde etc nog niet.
+  - De eerste refractie berekeningen werken nu, maar de tweede, derde etc. nog niet.
 - 20-2-2024 17:56 (+50 minuten)
   - De berekening van de 2 snijdende lijnen werkt nu stabieler
   - 2e, 3e, 4e etc. refractie werkt nu ook (in de chrome console kan je `user.maxLightCalculations = [nummer tussen 0 en ∞]`)
@@ -24,3 +24,4 @@
 - 25-2-2024 18:53 (+160 minuten)
   - De code voor het tekenen van de lijnen is nu beter geschreven en werkt voor elk object dat je kan bedenken (zonder gaten).
   - De code om de lichtstralen te berekenen is nu ook beter geschreven en werkt nu ook voor elk object dat je kan bedenken (zonder gaten).
+  - Nu zijn lijnen ook een ding, dus, jee :)

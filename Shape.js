@@ -1,7 +1,5 @@
 function Shape() {}
 
-//this.points = [{x1: this.x, y1: this.y}, {x2: this.x + this.w, y2: this.y}, {x3: this.x + this.w, y3: this.y + this.h}, {x4: this.x, y4: this.y + this.h}];
-
 Shape.prototype.intersectRay = function(ray, shape) {
     const angleRadians = ray.angleRadians;
     const x1 = ray.x;
@@ -10,20 +8,34 @@ Shape.prototype.intersectRay = function(ray, shape) {
     const y2 = ray.y + Math.sin(angleRadians) * 10000;
 
     let intersections = [];
-    //check if the ray intersects x1y1 to x2y2
-    shape.points.forEach(function(point, index){
-        const nextIndex = index === shape.points.length - 1 ? 0 : index + 1;
 
+    if (shape.points.length > 2) {
         //check if the ray intersects x1y1 to x2y2
-        const intersection = intersectLines(point.x, point.y, shape.points[nextIndex].x, shape.points[nextIndex].y, x1, y1, x2, y2);
+        shape.points.forEach(function(point, index){
+            const nextIndex = index === shape.points.length - 1 ? 0 : index + 1;
+
+            //check if the ray intersects x1y1 to x2y2
+            const intersection = intersectLines(point.x, point.y, shape.points[nextIndex].x, shape.points[nextIndex].y, x1, y1, x2, y2);
+            if(intersection){
+                intersections.push(intersection);
+            }
+        });
+    }
+    else if (shape.points.length === 2) {
+        const intersection = intersectLines(shape.points[0].x, shape.points[0].y, shape.points[1].x, shape.points[1].y, x1, y1, x2, y2);
         if(intersection){
             intersections.push(intersection);
         }
-    });
+    }
 
     if(intersections.length === 0){
         return null;
     }
+
+    //if the intersection is behind the ray, then remove it
+    intersections = intersections.filter(function(intersection){
+        return (intersection.x - x1) * Math.cos(angleRadians) + (intersection.y - y1) * Math.sin(angleRadians) > 0;
+    });
 
     return intersections;
 
