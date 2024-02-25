@@ -21,3 +21,6 @@
   - 2e, 3e, 4e etc. refractie werkt nu ook (in de chrome console kan je `user.maxLightCalculations = [nummer tussen 0 en ∞]`)
 - 22-2-2024 9:04 (+120 minuten)
   - Opnieuw begonnen met de code, nu weet ik hoe de wiskunde werkt en nu kan ik het vanuit de basis goed en geoptimaliseerd opbouwen.
+- 25-2-2024 18:53 (+160 minuten)
+  - De code voor het tekenen van de lijnen is nu beter geschreven en werkt voor elk object dat je kan bedenken (zonder gaten).
+  - De code om de lichtstralen te berekenen is nu ook beter geschreven en werkt nu ook voor elk object dat je kan bedenken (zonder gaten).

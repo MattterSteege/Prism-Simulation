@@ -59,14 +59,16 @@ Ray.prototype.calculateRay = function(shapes){
     var closestDistance = maxDistance;
 
     shapes.forEach(function(shape){
-        var intersection = shape.intersectRay(ray);
+        var intersection = shape.intersectRay(ray, shape);
         if(intersection){
-            var distance = Math.sqrt(Math.pow(ray.x - intersection.x, 2) + Math.pow(ray.y - intersection.y, 2));
-            if(distance < closestDistance){
-                closestDistance = distance;
-                closestIntersection = intersection;
-                closestShape = shape;
-            }
+            intersection.forEach(function(intersect){
+                var distance = Math.sqrt(Math.pow(intersect.x - ray.x, 2) + Math.pow(intersect.y - ray.y, 2));
+                if(distance < closestDistance){
+                    closestDistance = distance;
+                    closestIntersection = intersect;
+                    closestShape = shape;
+                }
+            });
         }
     });
 
@@ -77,4 +79,8 @@ Ray.prototype.calculateRay = function(shapes){
     }
 
     ray.RayParts = rayParts;
+}
+
+Ray.prototype.updatePoints = function(){
+    //this.RayParts = [{x: this.x, y: this.y}];
 }

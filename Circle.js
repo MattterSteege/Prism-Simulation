@@ -1,16 +1,17 @@
+const CircleResolutions = 100;
+
 //Class Circle
 Circle.prototype = new Shape();
 Circle.prototype.constructor = Circle;
 function Circle(x, y, w, fill) {
-    // This is a very simple and unsafe constructor. All we're doing is checking if the values exist.
-    // "x || 0" just means "if there is a value for x, use that. Otherwise use 0."
-    // But we aren't checking anything else! We could put "Lalala" for the value of x
+
     this.x = x || 0;
     this.y = y || 0;
     this.w = w || 1;
     this.fill = fill || '#AAAAAA';
-    this.points = [{x: this.x, y: this.y, w: this.w}];
+    this.points = [];
 
+    this.updatePoints();
 }
 // Draws this shape to a given context
 Circle.prototype.draw = function(ctx) {
@@ -36,4 +37,12 @@ Circle.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     //ctx.strokeRect(this.x,this.y,this.w,this.h)
     this.draw(ctx);
     ctx.stroke();
+}
+
+Circle.prototype.updatePoints = function(){
+    this.points = [];
+    for (var i = 0; i < CircleResolutions; i++){
+        var angle = (i / CircleResolutions) * Math.PI * 2;
+        this.points.push({x: this.x + this.w * Math.cos(angle), y: this.y + this.w * Math.sin(angle)});
+    }
 }
