@@ -5,7 +5,9 @@ function Text (x, y, font, fill, content) {
     this.y = y || 0;
     this.font = font;
     this.fill = fill;
+    this.w = content.length * 10;
     this.content = content;
+    this.points = [{x: this.x, y: this.y+ 18}, {x: this.x + this.w, y: this.y+ 18}, {x: this.x + this.w, y: this.y + 20+ 18}, {x: this.x, y: this.y + 20+ 18}];
 }
 
 Text.prototype.draw = function(ctx) {
@@ -25,7 +27,11 @@ Text.prototype.contains = function(mx, my) {
 Text.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     ctx.strokeStyle = strokeStyle;
     ctx.lineWidth = lineWidth;
-    //ctx.strokeRect(this.x,this.y,this.w,this.h)
+    ctx.strokeRect(this.x,this.y,this.w,this.h)
     this.draw(ctx);
     ctx.stroke();
+}
+
+Text.prototype.updatePoints = function(){
+    this.points = [{x: this.x, y: this.y- 18}, {x: this.x + this.w, y: this.y- 18}, {x: this.x + this.w, y: this.y + this.h- 18}, {x: this.x, y: this.y + this.h- 18}];
 }

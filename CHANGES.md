@@ -25,3 +25,5 @@
   - De code voor het tekenen van de lijnen is nu beter geschreven en werkt voor elk object dat je kan bedenken (zonder gaten).
   - De code om de lichtstralen te berekenen is nu ook beter geschreven en werkt nu ook voor elk object dat je kan bedenken (zonder gaten).
   - Nu zijn lijnen ook een ding, dus, jee :)
+- 26-2-2024 17:09 (+30 minuten)
+  - Alles staat klaar voor de reflectie, refractie en absorptie berekeningen, nu alleen nog de code schrijven.
