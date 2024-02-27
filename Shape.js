@@ -2,10 +2,10 @@ function Shape() {}
 
 Shape.prototype.intersectRay = function(ray, shape) {
     const angleRadians = ray.angleRadians;
-    const x1 = ray.x;
-    const y1 = ray.y;
-    const x2 = ray.x + Math.cos(angleRadians) * 10000;
-    const y2 = ray.y + Math.sin(angleRadians) * 10000;
+    const x1 = (ray.points[2].x + ray.points[1].x) / 2;
+    const y1 = (ray.points[2].y + ray.points[1].y) / 2;
+    const x2 = ((ray.points[2].x + ray.points[1].x) / 2) + Math.cos(angleRadians) * 10000;
+    const y2 = ((ray.points[2].y + ray.points[1].y) / 2) + Math.sin(angleRadians) * 10000;
 
     let intersections = [];
 
@@ -78,5 +78,3 @@ Shape.prototype.intersectRay = function(ray, shape) {
         return { x: xIntersection, y: yIntersection };
     }
 }
-
-

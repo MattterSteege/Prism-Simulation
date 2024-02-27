@@ -190,5 +190,5 @@ function init() {
     s.addShape(new Line(250, 50, 45, 100, 5, 'rgba(255,0,0,0.5)'));
     s.addShape(new Text(250, 50, '20px Arial', 'rgba(0,0,0,0.5)', 'Hello World!'));
 
-    s.addRay(new Ray(100, 100, 0, 687))
+    s.addRay(new Ray(100, 100, 45, 687))
 }

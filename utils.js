@@ -64,3 +64,18 @@ function RGBToHex(rgb){
     }
     return hex;
 }
+
+function rotatePoints(points, angleInRadians) {
+    // Calculate the center of the points
+    const centerX = points.reduce((sum, point) => sum + point.x, 0) / points.length;
+    const centerY = points.reduce((sum, point) => sum + point.y, 0) / points.length;
+
+    // Iterate through each point and apply rotation
+    const rotatedPoints = points.map(point => {
+        const x = centerX + (point.x - centerX) * Math.cos(angleInRadians) - (point.y - centerY) * Math.sin(angleInRadians);
+        const y = centerY + (point.x - centerX) * Math.sin(angleInRadians) + (point.y - centerY) * Math.cos(angleInRadians);
+        return { x, y };
+    });
+
+    return rotatedPoints;
+}

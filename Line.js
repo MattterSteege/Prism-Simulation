@@ -45,5 +45,4 @@ Line.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
 
 Line.prototype.updatePoints = function(){
     this.points = [{x: this.x, y: this.y}, {x: this.x + this.length * Math.cos(this.rotation), y: this.y + this.length * Math.sin(this.rotation)}];
-    console.log(this.points);
 }
