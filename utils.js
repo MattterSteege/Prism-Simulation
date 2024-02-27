@@ -65,17 +65,50 @@ function RGBToHex(rgb){
     return hex;
 }
 
+function rotatePointsAroundCenter(points, angle){
+    //angle is in degrees
+    var angleRadians = angle * Math.PI / 180;
+    //get the center of the points (average of all points)
+    var centerX = 0;
+    var centerY = 0;
+    points.forEach(function(point){
+        centerX += point.x;
+        centerY += point.y;
+    });
+    centerX /= points.length;
+    centerY /= points.length;
+    //rotate the points around the center
+    var newPoints = [];
+    points.forEach(function(point){
+        var x = centerX + (point.x - centerX) * Math.cos(angleRadians) - (point.y - centerY) * Math.sin(angleRadians);
+        var y = centerY + (point.x - centerX) * Math.sin(angleRadians) + (point.y - centerY) * Math.cos(angleRadians);
+        newPoints.push({x: x, y: y});
+    });
+    return newPoints;
+}
+
 function rotatePoints(points, angleInRadians) {
     // Calculate the center of the points
     const centerX = points.reduce((sum, point) => sum + point.x, 0) / points.length;
     const centerY = points.reduce((sum, point) => sum + point.y, 0) / points.length;
 
     // Iterate through each point and apply rotation
-    const rotatedPoints = points.map(point => {
+    return points.map(point => {
         const x = centerX + (point.x - centerX) * Math.cos(angleInRadians) - (point.y - centerY) * Math.sin(angleInRadians);
         const y = centerY + (point.x - centerX) * Math.sin(angleInRadians) + (point.y - centerY) * Math.cos(angleInRadians);
-        return { x, y };
+        return {x, y};
     });
+}
 
-    return rotatedPoints;
+function rotatePointsXY(points, angleInRadians, x, y) {
+     // Calculate the center of the points
+     const centerX = x;
+     const centerY = y;
+
+     // Iterate through each point and apply rotation
+    return points.map(point => {
+         const x = centerX + (point.x - centerX) * Math.cos(angleInRadians) - (point.y - centerY) * Math.sin(angleInRadians);
+         const y = centerY + (point.x - centerX) * Math.sin(angleInRadians) + (point.y - centerY) * Math.cos(angleInRadians);
+         return {x, y};
+     });
 }

@@ -7,7 +7,6 @@ function CanvasState(canvas) {
     this.ctx = canvas.getContext('2d');
     // This complicates things a little but but fixes mouse co-ordinate problems
     // when there's a border or padding. See getMouse for more detail
-    var stylePaddingLeft, stylePaddingTop, styleBorderLeft, styleBorderTop;
     if (document.defaultView && document.defaultView.getComputedStyle) {
         this.stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingLeft'], 10)      || 0;
         this.stylePaddingTop  = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingTop'], 10)       || 0;
@@ -95,7 +94,7 @@ function CanvasState(canvas) {
             myState.valid = false; // Something's dragging so we must redraw
         }
     }, true);
-    canvas.addEventListener('mouseup', function(e) {
+    canvas.addEventListener('mouseup', function() {
         myState.dragging = false;
     }, true);
 
@@ -184,11 +183,11 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(250, 50, 100, 'rgba(0,0,255,0.5)'));
-    s.addShape(new Rectangle(250, 50, 100, 100, 'rgba(255,165,0,0.5)'))
-    s.addShape(new Circle(250, 50, 50, 'rgba(0,255,0,0.5)'));
-    s.addShape(new Line(250, 50, 45, 100, 5, 'rgba(255,0,0,0.5)'));
-    s.addShape(new Text(250, 50, '20px Arial', 'rgba(0,0,0,0.5)', 'Hello World!'));
+    s.addShape(new Triangle(250, 550, 100, 'rgba(0,0,255,0.5)'));
+    s.addShape(new Rectangle(250, 450, 100, 100, 'rgba(255,165,0,0.5)'))
+    s.addShape(new Circle(300, 400, 50, 'rgba(0,255,0,0.5)'));
+    s.addShape(new Line(250, 250, 45, 141, 5, 'rgba(255,0,0,0.5)'));
+    //s.addShape(new Text(250, 150, '20px Arial', 'rgba(0,0,0,0.5)', 'Hello World!'));
 
     s.addRay(new Ray(100, 100, 45, 687))
 }
