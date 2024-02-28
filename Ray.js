@@ -4,29 +4,52 @@ Ray.prototype.constructor = Ray;
 function Ray(x, y, angle, waveLength) {
     this.x = x || 0;
     this.y = y || 0;
-    this.angleRadians = angle || 0; //angle in radians
-    this.angleDegrees = angle * (180 / Math.PI); //angle in degrees
+    this.w = 50;
+    this.h = 20;
+    // this.angleDegrees = angle || 0;
+    // this.angleRadians = Math.PI * this.angleDegrees / 180;
+    //every time this.angleDegrees is set, this.angleRadians should be updated
+    Object.defineProperty(this, 'angleDegrees', {
+        get: function() {
+            return this._angleDegrees;
+        },
+        set: function(value) {
+            this._angleDegrees = value;
+            this.angleRadians = Math.PI * value / 180;
+        }
+    });
+    this.angleDegrees = angle || 0;
     this.waveLength = waveLength || 1;
     this.fill = '#000';
-
-    this.RayParts = [{x: this.x, y: this.y}];
+    this.points = [{x: this.x - this.w / 2, y: this.y - this.h / 2}, {x: this.x + this.w / 2, y: this.y - this.h / 2}, {x: this.x + this.w / 2, y: this.y + this.h / 2}, {x: this.x - this.w / 2, y: this.y + this.h / 2}];
+    this.RayParts = [{x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2}];
+    this.emittingPoint = {x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2};
 }
 
 
 // Draws this line to a given context
 Ray.prototype.draw = function(ctx) {
+    const rotatedPoints = rotatePoints(this.points, this.angleRadians);
+    this.emittingPoint = {x: (rotatedPoints[1].x + rotatedPoints[2].x) / 2, y: (rotatedPoints[1].y + rotatedPoints[2].y) / 2};
+
     ctx.fillStyle = this.fill;
-    ctx.fillRect(this.x - 50, this.y - 10, 50, 20);
+    ctx.moveTo(rotatedPoints[0].x, rotatedPoints[0].y);
+    rotatedPoints.forEach(function (point) {
+        ctx.lineTo(point.x, point.y);
+    });
+    ctx.lineTo(rotatedPoints[0].x, rotatedPoints[0].y);
+    ctx.fill();
 
     ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
 
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y);
-    this.RayParts.forEach(function (part) {
-        ctx.lineTo(part.x, part.y);
+    ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
+    this.RayParts.forEach(function (point) {
+        ctx.lineTo(point.x, point.y);
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, true);
     });
-    ctx.closePath();
     ctx.stroke();
+    ctx.closePath();
 }
 
 // Determine if a point is inside the shape's bounds
@@ -39,15 +62,21 @@ Ray.prototype.contains = function(mx, my) {
 Ray.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     ctx.strokeStyle = strokeStyle;
     ctx.lineWidth = lineWidth;
-    ctx.fillRect(this.x - 50, this.y - 10, 50, 20);
-
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y);
-    this.RayParts.forEach(function (part) {
-        ctx.lineTo(part.x, part.y);
+    ctx.moveTo(this.points[0].x, this.points[0].y);
+    this.points.forEach(function (point) {
+        ctx.lineTo(point.x, point.y);
     });
-    ctx.closePath();
+    ctx.lineTo(this.points[0].x, this.points[0].y);
     ctx.stroke();
+    ctx.closePath();
+
+    ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
+    ctx.beginPath();
+    ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
+    ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
+    ctx.stroke();
+    ctx.closePath();
 }
 
 Ray.prototype.calculateRay = function(shapes){
@@ -82,5 +111,6 @@ Ray.prototype.calculateRay = function(shapes){
 }
 
 Ray.prototype.updatePoints = function(){
-    //this.RayParts = [{x: this.x, y: this.y}];
+    this.points = [{x: this.x, y: this.y}, {x: this.x + this.w, y: this.y}, {x: this.x + this.w, y: this.y + this.h}, {x: this.x, y: this.y + this.h}];
+    this.emittingPoint = {x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2};
 }
