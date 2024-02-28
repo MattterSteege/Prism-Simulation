@@ -27,3 +27,5 @@
   - Nu zijn lijnen ook een ding, dus, jee :)
 - 26-2-2024 17:09 (+30 minuten)
   - Alles staat klaar voor de reflectie, refractie en absorptie berekeningen, nu alleen nog de code schrijven.
+- 27-2-2024 18:23 (+60 minuten)
+  - alles is schoner enz.

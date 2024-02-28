@@ -27,7 +27,8 @@ Rectangle.prototype.contains = function(mx, my) {
 Rectangle.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     ctx.strokeStyle = strokeStyle;
     ctx.lineWidth = lineWidth;
-    ctx.strokeRect(this.x,this.y,this.w,this.h)
+    this.draw(ctx);
+    ctx.stroke();
 }
 
 Rectangle.prototype.updatePoints = function(){

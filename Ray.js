@@ -44,10 +44,8 @@ Ray.prototype.draw = function(ctx) {
 
     ctx.beginPath();
     ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
-    this.RayParts.forEach(function (point) {
-        ctx.lineTo(point.x, point.y);
-        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, true);
-    });
+    ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
+
     ctx.stroke();
     ctx.closePath();
 }
@@ -62,21 +60,7 @@ Ray.prototype.contains = function(mx, my) {
 Ray.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
     ctx.strokeStyle = strokeStyle;
     ctx.lineWidth = lineWidth;
-    ctx.beginPath();
-    ctx.moveTo(this.points[0].x, this.points[0].y);
-    this.points.forEach(function (point) {
-        ctx.lineTo(point.x, point.y);
-    });
-    ctx.lineTo(this.points[0].x, this.points[0].y);
-    ctx.stroke();
-    ctx.closePath();
-
-    ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
-    ctx.beginPath();
-    ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
-    ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
-    ctx.stroke();
-    ctx.closePath();
+    this.draw(ctx);
 }
 
 Ray.prototype.calculateRay = function(shapes){

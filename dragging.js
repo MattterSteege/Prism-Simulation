@@ -183,10 +183,10 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(250, 550, 100, 'rgba(0,0,255,0.5)'));
-    s.addShape(new Rectangle(250, 450, 100, 100, 'rgba(255,165,0,0.5)'))
-    s.addShape(new Circle(300, 400, 50, 'rgba(0,255,0,0.5)'));
-    s.addShape(new Line(250, 250, 45, 141, 5, 'rgba(255,0,0,0.5)'));
+    s.addShape(new Triangle(250, 550, 100, 'rgba(0,0,255,1)'));
+    s.addShape(new Rectangle(250, 450, 100, 100, 'rgba(255,165,0,1)'))
+    s.addShape(new Circle(300, 400, 50, 'rgba(0,255,0,1)'));
+    s.addShape(new Line(250, 250, -45, 141, 10, 'rgba(255,0,0,1)'));
     //s.addShape(new Text(250, 150, '20px Arial', 'rgba(0,0,0,0.5)', 'Hello World!'));
 
     s.addRay(new Ray(100, 100, 45, 687))
