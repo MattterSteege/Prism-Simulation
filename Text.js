@@ -24,13 +24,6 @@ Text.prototype.contains = function(mx, my) {
     return  (this.x <= mx) && (this.x + this.w >= mx) &&
         (this.y >= my) && (this.y + this.h >= my);
 }
-Text.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
-    ctx.strokeStyle = strokeStyle;
-    ctx.lineWidth = lineWidth;
-    ctx.strokeRect(this.x,this.y,this.w,this.h)
-    this.draw(ctx);
-    ctx.stroke();
-}
 
 Text.prototype.updatePoints = function(){
     this.points = [{x: this.x, y: this.y- 18}, {x: this.x + this.w, y: this.y- 18}, {x: this.x + this.w, y: this.y + this.h- 18}, {x: this.x, y: this.y + this.h- 18}];

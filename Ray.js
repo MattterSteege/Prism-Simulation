@@ -1,7 +1,7 @@
 //Ray class
 Ray.prototype = new Shape();
 Ray.prototype.constructor = Ray;
-function Ray(x, y, angle, waveLength) {
+function Ray(x, y, angle, waveLength, fill) {
     this.x = x || 0;
     this.y = y || 0;
     this.w = 50;
@@ -20,64 +20,59 @@ function Ray(x, y, angle, waveLength) {
     });
     this.angleDegrees = angle || 0;
     this.waveLength = waveLength || 1;
-    this.fill = '#000';
-    this.points = [{x: this.x - this.w / 2, y: this.y - this.h / 2}, {x: this.x + this.w / 2, y: this.y - this.h / 2}, {x: this.x + this.w / 2, y: this.y + this.h / 2}, {x: this.x - this.w / 2, y: this.y + this.h / 2}];
+    this.fill = fill || '#AAAAAA';
+
+    this.updatePoints();
     this.RayParts = [{x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2}];
-    this.emittingPoint = {x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2};
 }
 
 
 // Draws this line to a given context
 Ray.prototype.draw = function(ctx) {
-    const rotatedPoints = rotatePoints(this.points, this.angleRadians);
-    this.emittingPoint = {x: (rotatedPoints[1].x + rotatedPoints[2].x) / 2, y: (rotatedPoints[1].y + rotatedPoints[2].y) / 2};
+    this.updatePoints();
+    this.calculateRay(s.shapes);
+
 
     ctx.fillStyle = this.fill;
-    ctx.moveTo(rotatedPoints[0].x, rotatedPoints[0].y);
-    rotatedPoints.forEach(function (point) {
-        ctx.lineTo(point.x, point.y);
-    });
-    ctx.lineTo(rotatedPoints[0].x, rotatedPoints[0].y);
-    ctx.fill();
-
-    ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
-
-    ctx.beginPath();
-    ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
-    this.RayParts.forEach(function (point) {
-        ctx.lineTo(point.x, point.y);
-        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, true);
-    });
-    ctx.stroke();
-    ctx.closePath();
-}
-
-// Determine if a point is inside the shape's bounds
-Ray.prototype.contains = function(mx, my) {
-    //when clicked on the rectangle
-    return (this.x - 50 <= mx) && (this.x + 50 >= mx) &&
-        (this.y - 10 <= my) && (this.y + 10 >= my);
-}
-
-Ray.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
-    ctx.strokeStyle = strokeStyle;
-    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = this.fill;
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.points[0].y);
     this.points.forEach(function (point) {
         ctx.lineTo(point.x, point.y);
     });
     ctx.lineTo(this.points[0].x, this.points[0].y);
-    ctx.stroke();
     ctx.closePath();
+    ctx.fill();
 
+
+    //draw the ray
     ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
+
+    //console.log(this.RayParts);
+
     ctx.beginPath();
     ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
     ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
     ctx.stroke();
     ctx.closePath();
+
+    //draw the normal
+    ctx.strokeStyle = '#0f0';
+    ctx.beginPath();
+    if (this.RayParts[0].normal && user.showNormals) {
+        ctx.moveTo(this.RayParts[0].normal.x1, this.RayParts[0].normal.y1);
+        ctx.lineTo(this.RayParts[0].normal.x2, this.RayParts[0].normal.y2);
+    }
+    ctx.stroke();
+    ctx.closePath();
 }
+
+// Determine if a point is inside the shape's bounds
+// Ray.prototype.contains = function(mx, my) {
+//     //when clicked on the rectangle
+//     return (this.x - 50 <= mx) && (this.x + 50 >= mx) &&
+//         (this.y - 10 <= my) && (this.y + 10 >= my);
+// }
 
 Ray.prototype.calculateRay = function(shapes){
     var ray = this;
@@ -112,5 +107,6 @@ Ray.prototype.calculateRay = function(shapes){
 
 Ray.prototype.updatePoints = function(){
     this.points = [{x: this.x, y: this.y}, {x: this.x + this.w, y: this.y}, {x: this.x + this.w, y: this.y + this.h}, {x: this.x, y: this.y + this.h}];
-    this.emittingPoint = {x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2};
+    const rot = this.points = rotatePoints(this.points, this.angleRadians);
+    this.emittingPoint = {x: (rot[1].x + rot[2].x) / 2, y: (rot[1].y + rot[2].y) / 2};
 }
