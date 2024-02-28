@@ -75,12 +75,47 @@ Shape.prototype.intersectRay = function(ray, shape) {
             return null;
         }
 
-        return { x: xIntersection, y: yIntersection };
+        //create a normal and follow this step plan:
+        //1. get the angle of the line
+        //2. add 90 degrees to the angle
+        //3. draw 2 lines from the intersection point to the left and right
+        //4. check which of the goes in the direction of the start point of the ray
+        //5. log all the data from this step plan
+
+        let angle = Math.atan2(y2 - y1, x2 - x1); //angle in radians
+        angle = RadiansToDegrees(angle); //angle in degrees
+        angle += 90;
+        angle %= 360;
+        angle = DegreesToRadians(angle);
+
+        let normal = [{x1: xIntersection, y1: yIntersection, x2: xIntersection + 50 * Math.cos(angle), y2: yIntersection + 50 * Math.sin(angle)}, {x1: xIntersection, y1: yIntersection, x2: xIntersection + 50 * Math.cos(angle + Math.PI), y2: yIntersection + 50 * Math.sin(angle + Math.PI)}];
+
+        let distance1 = Math.sqrt(Math.pow(normal[0].x1 - x1, 2) + Math.pow(normal[0].y1 - y1, 2));
+        let distance2 = Math.sqrt(Math.pow(normal[1].x1 - x1, 2) + Math.pow(normal[1].y1 - y1, 2));
+        let distance3 = Math.sqrt(Math.pow(normal[0].x2 - x1, 2) + Math.pow(normal[0].y2 - y1, 2));
+        let distance4 = Math.sqrt(Math.pow(normal[1].x2 - x1, 2) + Math.pow(normal[1].y2 - y1, 2));
+
+        let distance = Math.min(distance1, distance2, distance3, distance4);
+
+        let closestNormal = null;
+        if(distance === distance1){
+            closestNormal = normal[0];
+        }
+        else if(distance === distance2){
+            closestNormal = normal[1];
+        }
+        else if(distance === distance3){
+            closestNormal = normal[0];
+        }
+        else if(distance === distance4){
+            closestNormal = normal[1];
+        }
+
+        return { x: xIntersection, y: yIntersection, normal: closestNormal };
     }
 }
 
 Shape.prototype.contains = function(mx, my) {
-    console.log("General Shape contains function");
     // Check if a point (mx, my) is inside a polygon defined by an array of points
     const points = this.points;
 

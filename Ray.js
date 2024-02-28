@@ -48,9 +48,15 @@ Ray.prototype.draw = function(ctx) {
     //draw the ray
     ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
 
+    //console.log(this.RayParts);
+
     ctx.beginPath();
     ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
     ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
+    if (this.RayParts[0].normal) {
+        ctx.moveTo(this.RayParts[0].normal.x1, this.RayParts[0].normal.y1);
+        ctx.lineTo(this.RayParts[0].normal.x2, this.RayParts[0].normal.y2);
+    }
     ctx.stroke();
     ctx.closePath();
 }

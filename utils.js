@@ -112,3 +112,12 @@ function rotatePointsXY(points, angleInRadians, x, y) {
          return {x, y};
      });
 }
+
+//==============================================================================
+function DegreesToRadians(degrees){
+    return degrees * Math.PI / 180;
+}
+
+function RadiansToDegrees(radians){
+    return radians * 180 / Math.PI;
+}

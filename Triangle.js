@@ -21,26 +21,27 @@ Triangle.prototype.draw = function(ctx) {
     });
     ctx.lineTo(this.points[0].x, this.points[0].y);
     ctx.closePath();
-    ctx.fill();
+    //ctx.fill();
+    ctx.stroke();
 };
 
 // // Determine if a point is inside the shape's bounds
-Triangle.prototype.contains = function(mx, my) {
-    const height = (Math.sqrt(3) / 2) * this.width;
-    const x1 = this.x;
-    const y1 = this.y + height;
-    const x2 = this.x + this.width;
-    const y2 = this.y + height;
-    const x3 = this.x + this.width / 2;
-    const y3 = this.y;
-
-    const denominator = ((y2 - y3)*(x1 - x3) + (x3 - x2)*(y1 - y3));
-    const a = ((y2 - y3)*(mx - x3) + (x3 - x2)*(my - y3)) / denominator;
-    const b = ((y3 - y1)*(mx - x3) + (x1 - x3)*(my - y3)) / denominator;
-    const c = 1 - a - b;
-
-    return 0 <= a && a <= 1 && 0 <= b && b <= 1 && 0 <= c && c <= 1;
-};
+// Triangle.prototype.contains = function(mx, my) {
+//     const height = (Math.sqrt(3) / 2) * this.width;
+//     const x1 = this.x;
+//     const y1 = this.y + height;
+//     const x2 = this.x + this.width;
+//     const y2 = this.y + height;
+//     const x3 = this.x + this.width / 2;
+//     const y3 = this.y;
+//
+//     const denominator = ((y2 - y3)*(x1 - x3) + (x3 - x2)*(y1 - y3));
+//     const a = ((y2 - y3)*(mx - x3) + (x3 - x2)*(my - y3)) / denominator;
+//     const b = ((y3 - y1)*(mx - x3) + (x1 - x3)*(my - y3)) / denominator;
+//     const c = 1 - a - b;
+//
+//     return 0 <= a && a <= 1 && 0 <= b && b <= 1 && 0 <= c && c <= 1;
+// };
 
 Triangle.prototype.updatePoints = function(){
     const height = (Math.sqrt(3) / 2) * this.width;

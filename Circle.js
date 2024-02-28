@@ -23,7 +23,8 @@ Circle.prototype.draw = function(ctx) {
     });
     ctx.lineTo(this.points[0].x, this.points[0].y);
     ctx.closePath();
-    ctx.fill();
+    //ctx.fill();
+    ctx.stroke();
 }
 
 // Determine if a point is inside the shape's bounds

@@ -24,7 +24,8 @@ Line.prototype.draw = function(ctx) {
     });
     ctx.lineTo(this.points[0].x, this.points[0].y);
     ctx.closePath();
-    ctx.fill();
+    //ctx.fill();
+    ctx.stroke();
 }
 
 Line.prototype.updatePoints = function(){

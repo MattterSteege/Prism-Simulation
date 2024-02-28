@@ -185,7 +185,7 @@ function init() {
 
     s.addShape(new Triangle(250, 550, 100, '#ffbe0b'));
     s.addShape(new Rectangle(250, 450, 100, 100, '#fb5607'))
-    s.addShape(new Line(250, 250, -45, 141, 5, '#ff006e'));
+    s.addShape(new Line(250, 250, -33, 141, 5, '#ff006e'));
     s.addShape(new Circle(300, 400, 50, '#8338ec'));
     //s.addShape(new Text(250, 150, '20px Arial', '#3a86ff', 'Hello World!'));
 
