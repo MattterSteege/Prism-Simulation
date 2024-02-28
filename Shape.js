@@ -39,10 +39,10 @@ Shape.prototype.intersectRay = function(ray, shape) {
 
     return intersections;
 
-    function intersectLines(x1, y1, x2, y2, x3, y3, x4, y4) {
+    function intersectLines(x1, y1, x2, y2, emittingPointX, emittingPointY, x4, y4) {
         // Calculate slopes
         let m1 = (y2 - y1) / (x2 - x1);
-        let m2 = (y4 - y3) / (x4 - x3);
+        let m2 = (y4 - emittingPointY) / (x4 - emittingPointX);
 
         //if m1 is infinity or -infinity (vertical line) then set m1 to Number.MAX_VALUE
         if(m1 === Infinity || m1 === -Infinity){
@@ -58,7 +58,7 @@ Shape.prototype.intersectRay = function(ray, shape) {
             return null;
 
         // Calculate intersection point
-        let xIntersection = (m1 * x1 - m2 * x3 + y3 - y1) / (m1 - m2);
+        let xIntersection = (m1 * x1 - m2 * emittingPointX + emittingPointY - y1) / (m1 - m2);
         let yIntersection = m1 * (xIntersection - x1) + y1;
 
         //check if xIntersection is within the point range
@@ -84,34 +84,28 @@ Shape.prototype.intersectRay = function(ray, shape) {
 
         let angle = Math.atan2(y2 - y1, x2 - x1); //angle in radians
         angle = RadiansToDegrees(angle); //angle in degrees
-        angle += 90;
+        angle -= 90;
         angle %= 360;
         angle = DegreesToRadians(angle);
 
         let normal = [{x1: xIntersection, y1: yIntersection, x2: xIntersection + 50 * Math.cos(angle), y2: yIntersection + 50 * Math.sin(angle)}, {x1: xIntersection, y1: yIntersection, x2: xIntersection + 50 * Math.cos(angle + Math.PI), y2: yIntersection + 50 * Math.sin(angle + Math.PI)}];
 
-        let distance1 = Math.sqrt(Math.pow(normal[0].x1 - x1, 2) + Math.pow(normal[0].y1 - y1, 2));
-        let distance2 = Math.sqrt(Math.pow(normal[1].x1 - x1, 2) + Math.pow(normal[1].y1 - y1, 2));
-        let distance3 = Math.sqrt(Math.pow(normal[0].x2 - x1, 2) + Math.pow(normal[0].y2 - y1, 2));
-        let distance4 = Math.sqrt(Math.pow(normal[1].x2 - x1, 2) + Math.pow(normal[1].y2 - y1, 2));
+        //check which is pointing to emittingPointX, emittingPointY (closest)
+        let distance1 = Math.sqrt(Math.pow(normal[0].x2 - emittingPointX, 2) + Math.pow(normal[0].y2 - emittingPointY, 2));
+        let distance2 = Math.sqrt(Math.pow(normal[1].x2 - emittingPointX, 2) + Math.pow(normal[1].y2 - emittingPointY, 2));
 
-        let distance = Math.min(distance1, distance2, distance3, distance4);
+        //console.log(distance1, distance2);
 
-        let closestNormal = null;
-        if(distance === distance1){
-            closestNormal = normal[0];
-        }
-        else if(distance === distance2){
-            closestNormal = normal[1];
-        }
-        else if(distance === distance3){
-            closestNormal = normal[0];
-        }
-        else if(distance === distance4){
-            closestNormal = normal[1];
-        }
+        // // if(distance1 < distance2){
+        // //     normal = normal[0];
+        // // }
+        // // else{
+        // //     normal = normal[1];
+        // // }
+        //
+        // normal = (distance1 < distance2) ? normal[0] : normal[1];
 
-        return { x: xIntersection, y: yIntersection, normal: closestNormal };
+        return { x: xIntersection, y: yIntersection, normal: (distance1 < distance2) ? normal[0] : normal[1] };
     }
 }
 

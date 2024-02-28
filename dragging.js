@@ -189,5 +189,5 @@ function init() {
     s.addShape(new Circle(300, 400, 50, '#8338ec'));
     //s.addShape(new Text(250, 150, '20px Arial', '#3a86ff', 'Hello World!'));
 
-    s.addRay(new Ray(100, 100, 45, 687, '#000'));
+    s.addRay(new Ray(100, 100, 45, 687, '#888'));
 }

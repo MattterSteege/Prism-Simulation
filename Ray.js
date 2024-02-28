@@ -53,6 +53,12 @@ Ray.prototype.draw = function(ctx) {
     ctx.beginPath();
     ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
     ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
+    ctx.stroke();
+    ctx.closePath();
+
+    //draw the normal
+    ctx.strokeStyle = '#0f0';
+    ctx.beginPath();
     if (this.RayParts[0].normal) {
         ctx.moveTo(this.RayParts[0].normal.x1, this.RayParts[0].normal.y1);
         ctx.lineTo(this.RayParts[0].normal.x2, this.RayParts[0].normal.y2);
