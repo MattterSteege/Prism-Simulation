@@ -29,5 +29,9 @@
   - Alles staat klaar voor de reflectie, refractie en absorptie berekeningen, nu alleen nog de code schrijven.
 - 27-2-2024 18:23 (+60 minuten)
   - alles is schoner enz.
-- 28-2-2024 18:39 (+150 minuten)
+- 28-2-2024 20:13 (+250 minuten)
   - de normaal wordt nu berekend, maar bij driehoeken werkt het nog niet, maar dat lukt volgende keer wel.
+  - De normaal berekenen werkt nu ook voor driehoeken.
+  - De code is beter en stabieler geschreven.
+  - De code werkt nu ook mobiel (en met touchscreen in het algemeen).
+  - Er is nu een 'gebruiker' waarin je verschillende dingen kan instellen.

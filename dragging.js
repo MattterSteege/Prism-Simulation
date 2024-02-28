@@ -98,9 +98,38 @@ function CanvasState(canvas) {
         myState.dragging = false;
     }, true);
 
+    // Add touch events
+    canvas.addEventListener('touchstart', function(e) {
+        // Prevent scrolling on touch devices
+        e.preventDefault();
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent('mousedown', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent('mousemove', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        var mouseEvent = new MouseEvent('mouseup', {});
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+
     this.interval = 10;
     setInterval(function() { myState.draw(); }, myState.interval);
 }
+
 
 CanvasState.prototype.addShape = function(shape) {
     this.shapes.push(shape);
@@ -184,10 +213,10 @@ function init() {
     s.canvas.height = s.height = window.innerHeight;
 
     s.addShape(new Triangle(250, 550, 100, '#ffbe0b'));
-    s.addShape(new Rectangle(250, 450, 100, 100, '#fb5607'))
+    s.addShape(new Rectangle(250, 450, 100, 100, '#fb5607'));
     s.addShape(new Line(250, 250, -33, 141, 5, '#ff006e'));
     s.addShape(new Circle(300, 400, 50, '#8338ec'));
-    //s.addShape(new Text(250, 150, '20px Arial', '#3a86ff', 'Hello World!'));
+    s.addShape(new Text(250, 150, '20px Arial', '#3a86ff', 'Hello World!'));
 
     s.addRay(new Ray(100, 100, 45, 687, '#888'));
 }

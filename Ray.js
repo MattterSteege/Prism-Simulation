@@ -59,7 +59,7 @@ Ray.prototype.draw = function(ctx) {
     //draw the normal
     ctx.strokeStyle = '#0f0';
     ctx.beginPath();
-    if (this.RayParts[0].normal) {
+    if (this.RayParts[0].normal && user.showNormals) {
         ctx.moveTo(this.RayParts[0].normal.x1, this.RayParts[0].normal.y1);
         ctx.lineTo(this.RayParts[0].normal.x2, this.RayParts[0].normal.y2);
     }
