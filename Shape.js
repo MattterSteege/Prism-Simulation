@@ -78,3 +78,37 @@ Shape.prototype.intersectRay = function(ray, shape) {
         return { x: xIntersection, y: yIntersection };
     }
 }
+
+Shape.prototype.contains = function(mx, my) {
+    console.log("General Shape contains function");
+    // Check if a point (mx, my) is inside a polygon defined by an array of points
+    const points = this.points;
+
+    let isInside = false;
+    const n = points.length;
+
+    for (let i = 0, j = n - 1; i < n; j = i++) {
+        const xi = points[i].x;
+        const yi = points[i].y;
+        const xj = points[j].x;
+        const yj = points[j].y;
+
+        const intersect =
+            ((yi > my) !== (yj > my)) &&
+            (mx < (xj - xi) * (my - yi) / (yj - yi) + xi);
+
+        if (intersect) {
+            isInside = !isInside;
+        }
+    }
+
+    return isInside;
+}
+
+Shape.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
+    console.log("general Stroke")
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = lineWidth;
+    this.draw(ctx);
+    ctx.stroke();
+}

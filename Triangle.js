@@ -7,23 +7,24 @@ function Triangle(x, y, width, fill) {
     this.y = y || 0;
     this.width = width || 1; //equilateral triangle
     this.fill = fill || '#AAAAAA';
-    this.points = [{x: this.x, y: this.y + (Math.sqrt(3) / 2) * this.width}, {x: this.x + this.width, y: this.y + (Math.sqrt(3) / 2) * this.width}, {x: this.x + this.width / 2, y: this.y}];
-}
+
+    this.updatePoints();}
 
 // Draws this shape to a given context
 Triangle.prototype.draw = function(ctx) {
     ctx.fillStyle = this.fill;
-    // Equilateral triangle
-    const height = (Math.sqrt(3) / 2) * this.width;
+    ctx.strokeStyle = this.fill;
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y + height);
-    ctx.lineTo(this.x + this.width, this.y + height);
-    ctx.lineTo(this.x + this.width / 2, this.y);
+    ctx.moveTo(this.points[0].x, this.points[0].y);
+    this.points.forEach(function (point) {
+        ctx.lineTo(point.x, point.y);
+    });
+    ctx.lineTo(this.points[0].x, this.points[0].y);
     ctx.closePath();
     ctx.fill();
 };
 
-// Determine if a point is inside the shape's bounds
+// // Determine if a point is inside the shape's bounds
 Triangle.prototype.contains = function(mx, my) {
     const height = (Math.sqrt(3) / 2) * this.width;
     const x1 = this.x;
@@ -39,19 +40,6 @@ Triangle.prototype.contains = function(mx, my) {
     const c = 1 - a - b;
 
     return 0 <= a && a <= 1 && 0 <= b && b <= 1 && 0 <= c && c <= 1;
-};
-
-Triangle.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
-    ctx.strokeStyle = strokeStyle;
-    ctx.lineWidth = lineWidth;
-
-    const height = (Math.sqrt(3) / 2) * this.width;
-    ctx.beginPath();
-    ctx.moveTo(this.x, this.y + height);
-    ctx.lineTo(this.x + this.width, this.y + height);
-    ctx.lineTo(this.x + this.width / 2, this.y);
-    ctx.closePath();
-    ctx.stroke();
 };
 
 Triangle.prototype.updatePoints = function(){

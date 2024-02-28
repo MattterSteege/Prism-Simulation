@@ -8,12 +8,21 @@ function Rectangle(x, y, w, h, fill) {
     this.w = w || 1;
     this.h = h || 1;
     this.fill = fill || '#AAAAAA';
-    this.points = [{x: this.x, y: this.y}, {x: this.x + this.w, y: this.y}, {x: this.x + this.w, y: this.y + this.h}, {x: this.x, y: this.y + this.h}];
+
+    this.updatePoints();
 }
 // Draws this shape to a given context
 Rectangle.prototype.draw = function(ctx) {
     ctx.fillStyle = this.fill;
-    ctx.fillRect(this.x, this.y, this.w, this.h);
+    ctx.strokeStyle = this.fill;
+    ctx.beginPath();
+    ctx.moveTo(this.points[0].x, this.points[0].y);
+    this.points.forEach(function (point) {
+        ctx.lineTo(point.x, point.y);
+    });
+    ctx.lineTo(this.points[0].x, this.points[0].y);
+    ctx.closePath();
+    ctx.fill();
 }
 
 // Determine if a point is inside the shape's bounds
@@ -22,13 +31,6 @@ Rectangle.prototype.contains = function(mx, my) {
     // the shape's X and (X + Height) and its Y and (Y + Height)
     return  (this.x <= mx) && (this.x + this.w >= mx) &&
         (this.y <= my) && (this.y + this.h >= my);
-}
-
-Rectangle.prototype.stroke = function(ctx, strokeStyle, lineWidth) {
-    ctx.strokeStyle = strokeStyle;
-    ctx.lineWidth = lineWidth;
-    this.draw(ctx);
-    ctx.stroke();
 }
 
 Rectangle.prototype.updatePoints = function(){
