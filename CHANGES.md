@@ -35,3 +35,5 @@
   - De code is beter en stabieler geschreven.
   - De code werkt nu ook mobiel (en met touchscreen in het algemeen).
   - Er is nu een 'gebruiker' waarin je verschillende dingen kan instellen.
+- 29-2-2024 8:51 (+30 minuten)
+  - Je kan nu instellen hoeveel lichtberekeningen er maximaal gedaan mogen worden, dit werkt ook al, nu alleen nog de hoek van elk deel van dfe lichtstraal berekenen en verwerken in de berekeningen.

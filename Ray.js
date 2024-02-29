@@ -23,16 +23,16 @@ function Ray(x, y, angle, waveLength, fill) {
     this.fill = fill || '#AAAAAA';
 
     this.updatePoints();
-    this.RayParts = [{x: (this.points[1].x + this.points[2].x) / 2, y: (this.points[1].y + this.points[2].y) / 2}];
+    this.RayParts = [];
 }
 
 
 // Draws this line to a given context
-Ray.prototype.draw = function(ctx) {
+Ray.prototype.draw = async function (ctx) {
     this.updatePoints();
-    this.calculateRay(s.shapes);
+    this.RayParts = [];
 
-
+    //draw the lamp
     ctx.fillStyle = this.fill;
     ctx.strokeStyle = this.fill;
     ctx.beginPath();
@@ -44,39 +44,39 @@ Ray.prototype.draw = function(ctx) {
     ctx.closePath();
     ctx.fill();
 
+    for (let i = 0; i < user.maxLightBounces; i++) {
+        this.calculateRay(s.shapes);
+        ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
 
-    //draw the ray
-    ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
+        ctx.beginPath();
+        // ctx.moveTo(this.RayParts[0].xStart, this.RayParts[0].yStart);
+        // ctx.lineTo(this.RayParts[0].xEnd, this.RayParts[0].yEnd);
+        this.RayParts.forEach(function (rayPart) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#f00';
+            ctx.moveTo(rayPart.xStart, rayPart.yStart);
+            ctx.lineTo(rayPart.xEnd, rayPart.yEnd);
+            ctx.stroke();
+            ctx.closePath();
 
-    //console.log(this.RayParts);
+            ctx.beginPath();
+            ctx.strokeStyle = '#0f0';
+            if (rayPart.normal && user.showNormals) {
+                ctx.moveTo(rayPart.normal.x1, rayPart.normal.y1);
+                ctx.lineTo(rayPart.normal.x2, rayPart.normal.y2);
+            }
+            ctx.stroke();
+            ctx.closePath();
+        });
 
-    ctx.beginPath();
-    ctx.moveTo(this.emittingPoint.x, this.emittingPoint.y);
-    ctx.lineTo(this.RayParts[0].x, this.RayParts[0].y);
-    ctx.stroke();
-    ctx.closePath();
-
-    //draw the normal
-    ctx.strokeStyle = '#0f0';
-    ctx.beginPath();
-    if (this.RayParts[0].normal && user.showNormals) {
-        ctx.moveTo(this.RayParts[0].normal.x1, this.RayParts[0].normal.y1);
-        ctx.lineTo(this.RayParts[0].normal.x2, this.RayParts[0].normal.y2);
+        if (user.doStagedDraw > 0)
+            await delay(user.doStagedDraw)
     }
-    ctx.stroke();
-    ctx.closePath();
 }
-
-// Determine if a point is inside the shape's bounds
-// Ray.prototype.contains = function(mx, my) {
-//     //when clicked on the rectangle
-//     return (this.x - 50 <= mx) && (this.x + 50 >= mx) &&
-//         (this.y - 10 <= my) && (this.y + 10 >= my);
-// }
 
 Ray.prototype.calculateRay = function(shapes){
     var ray = this;
-    var rayParts = [];
+    var rayParts = ray.RayParts;
     var maxDistance = 10000;
     var closestIntersection = null;
     var closestShape = null;
@@ -86,7 +86,7 @@ Ray.prototype.calculateRay = function(shapes){
         var intersection = shape.intersectRay(ray, shape);
         if(intersection){
             intersection.forEach(function(intersect){
-                var distance = Math.sqrt(Math.pow(intersect.x - ray.x, 2) + Math.pow(intersect.y - ray.y, 2));
+                var distance = Math.sqrt(Math.pow(intersect.xEnd - ray.emittingPoint.x, 2) + Math.pow(intersect.yEnd - ray.emittingPoint.y, 2));
                 if(distance < closestDistance){
                     closestDistance = distance;
                     closestIntersection = intersect;
@@ -99,7 +99,7 @@ Ray.prototype.calculateRay = function(shapes){
     if(closestIntersection){
         rayParts.push(closestIntersection);
     }else{
-        rayParts.push({x: ray.x + Math.cos(ray.angleRadians) * maxDistance, y: ray.y + Math.sin(ray.angleRadians) * maxDistance});
+        rayParts.push({xStart: ray.emittingPoint.x, yStart: ray.emittingPoint.y, xEnd: ray.emittingPoint.x + maxDistance * Math.cos(ray.angleRadians), yEnd: ray.emittingPoint.y + maxDistance * Math.sin(ray.angleRadians)});
     }
 
     ray.RayParts = rayParts;

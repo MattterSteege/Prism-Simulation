@@ -212,11 +212,10 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(250, 550, 100, '#ffbe0b'));
-    s.addShape(new Rectangle(250, 450, 100, 100, '#fb5607'));
-    s.addShape(new Line(250, 250, -33, 141, 5, '#ff006e'));
-    s.addShape(new Circle(300, 400, 50, '#8338ec'));
-    s.addShape(new Text(250, 150, '20px Arial', '#3a86ff', 'Hello World!'));
+    s.addShape(new Triangle(600, 550, 100, '#ffbe0b'));
+    s.addShape(new Rectangle(450, 400, 100, 100, '#fb5607'));
+    //s.addShape(new Line(700, 700, -33, 141, 5, '#ff006e'));
+    s.addShape(new Circle(331, 350, 50, '#8338ec'));
 
-    s.addRay(new Ray(100, 100, 45, 687, '#888'));
+    s.addRay(new Ray(101, 100, 45, 687, '#888'));
 }
