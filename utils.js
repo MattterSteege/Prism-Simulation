@@ -126,3 +126,6 @@ function RadiansToDegrees(radians){
 function dotProduct(a, b){
     return a.x * b.x + a.y * b.y;
 }
+
+//==============================================================================
+const delay = ms => new Promise(res => setTimeout(res, ms));

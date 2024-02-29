@@ -2,8 +2,11 @@ function Shape() {}
 
 Shape.prototype.intersectRay = function(ray, shape) {
     const angleRadians = ray.angleRadians;
-    const x1 = ray.emittingPoint.x;
-    const y1 = ray.emittingPoint.y;
+    //if ray.Rayparts is not empty, then use the last point as the start point
+    let x1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].xEnd : ray.emittingPoint.x;
+    let y1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].yEnd : ray.emittingPoint.y;
+    x1 += 0.0001 * Math.cos(angleRadians);
+    y1 += 0.0001 * Math.sin(angleRadians);
     const x2 = ray.emittingPoint.x + 10000 * Math.cos(angleRadians);
     const y2 = ray.emittingPoint.y + 10000 * Math.sin(angleRadians);
 
@@ -34,7 +37,7 @@ Shape.prototype.intersectRay = function(ray, shape) {
 
     //if the intersection is behind the ray, then remove it
     intersections = intersections.filter(function(intersection){
-        return (intersection.x - x1) * Math.cos(angleRadians) + (intersection.y - y1) * Math.sin(angleRadians) > 0;
+        return (intersection.xEnd - x1) * Math.cos(angleRadians) + (intersection.yEnd - y1) * Math.sin(angleRadians) > 0;
     });
 
     return intersections;
@@ -94,18 +97,13 @@ Shape.prototype.intersectRay = function(ray, shape) {
         let distance1 = Math.sqrt(Math.pow(normal[0].x2 - emittingPointX, 2) + Math.pow(normal[0].y2 - emittingPointY, 2));
         let distance2 = Math.sqrt(Math.pow(normal[1].x2 - emittingPointX, 2) + Math.pow(normal[1].y2 - emittingPointY, 2));
 
-        //console.log(distance1, distance2);
-
-        // // if(distance1 < distance2){
-        // //     normal = normal[0];
-        // // }
-        // // else{
-        // //     normal = normal[1];
-        // // }
-        //
-        // normal = (distance1 < distance2) ? normal[0] : normal[1];
-
-        return { x: xIntersection, y: yIntersection, normal: (distance1 < distance2) ? normal[0] : normal[1] };
+        return {
+            xStart: emittingPointX,
+            yStart: emittingPointY,
+            xEnd: xIntersection,
+            yEnd: yIntersection,
+            normal: (distance1 < distance2) ? normal[0] : normal[1]
+        };
     }
 }
 
