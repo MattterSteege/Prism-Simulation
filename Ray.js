@@ -44,30 +44,27 @@ Ray.prototype.draw = async function (ctx) {
     ctx.closePath();
     ctx.fill();
 
-    for (let i = 0; i < user.maxLightBounces; i++) {
+    for (let i = 0; i < user.maxLightBounces - 1; i++) {
         this.calculateRay(s.shapes);
         ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
 
-        ctx.beginPath();
-        // ctx.moveTo(this.RayParts[0].xStart, this.RayParts[0].yStart);
-        // ctx.lineTo(this.RayParts[0].xEnd, this.RayParts[0].yEnd);
-        this.RayParts.forEach(function (rayPart) {
-            ctx.beginPath();
-            ctx.strokeStyle = '#f00';
-            ctx.moveTo(rayPart.xStart, rayPart.yStart);
-            ctx.lineTo(rayPart.xEnd, rayPart.yEnd);
-            ctx.stroke();
-            ctx.closePath();
+        let rayPart = this.RayParts[i];
 
-            ctx.beginPath();
-            ctx.strokeStyle = '#0f0';
-            if (rayPart.normal && user.showNormals) {
-                ctx.moveTo(rayPart.normal.x1, rayPart.normal.y1);
-                ctx.lineTo(rayPart.normal.x2, rayPart.normal.y2);
-            }
-            ctx.stroke();
-            ctx.closePath();
-        });
+        ctx.beginPath();
+        ctx.strokeStyle = '#f00';
+        ctx.moveTo(rayPart.xStart, rayPart.yStart);
+        ctx.lineTo(rayPart.xEnd, rayPart.yEnd);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#0f0';
+        if (rayPart.normal && user.showNormals) {
+            ctx.moveTo(rayPart.normal.x1, rayPart.normal.y1);
+            ctx.lineTo(rayPart.normal.x2, rayPart.normal.y2);
+        }
+        ctx.stroke();
+        ctx.closePath();
 
         if (user.doStagedDraw > 0)
             await delay(user.doStagedDraw)
@@ -99,7 +96,15 @@ Ray.prototype.calculateRay = function(shapes){
     if(closestIntersection){
         rayParts.push(closestIntersection);
     }else{
-        rayParts.push({xStart: ray.emittingPoint.x, yStart: ray.emittingPoint.y, xEnd: ray.emittingPoint.x + maxDistance * Math.cos(ray.angleRadians), yEnd: ray.emittingPoint.y + maxDistance * Math.sin(ray.angleRadians)});
+        //if the previous ray part does not have a normal, break (the ray is outside the canvas)
+        if(rayParts.length > 0 && !rayParts[rayParts.length - 1].normal)
+            return;
+
+        let x1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].xEnd : ray.emittingPoint.x;
+        let y1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].yEnd : ray.emittingPoint.y;
+        const x2 = x1 + 10000 * Math.cos(this.angleRadians);
+        const y2 = y1 + 10000 * Math.sin(this.angleRadians);
+        rayParts.push({xStart: x1, yStart: y1, xEnd: x2, yEnd: y2});
     }
 
     ray.RayParts = rayParts;

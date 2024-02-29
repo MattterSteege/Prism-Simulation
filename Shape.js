@@ -7,8 +7,8 @@ Shape.prototype.intersectRay = function(ray, shape) {
     let y1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].yEnd : ray.emittingPoint.y;
     x1 += 0.0001 * Math.cos(angleRadians);
     y1 += 0.0001 * Math.sin(angleRadians);
-    const x2 = ray.emittingPoint.x + 10000 * Math.cos(angleRadians);
-    const y2 = ray.emittingPoint.y + 10000 * Math.sin(angleRadians);
+    const x2 = x1 + 10000 * Math.cos(angleRadians);
+    const y2 = y1 + 10000 * Math.sin(angleRadians);
 
     let intersections = [];
 
@@ -42,10 +42,10 @@ Shape.prototype.intersectRay = function(ray, shape) {
 
     return intersections;
 
-    function intersectLines(x1, y1, x2, y2, emittingPointX, emittingPointY, x4, y4) {
+    function intersectLines(x1, y1, x2, y2, emittingPointX, emittingPointY, endPointX, endPointY) {
         // Calculate slopes
         let m1 = (y2 - y1) / (x2 - x1);
-        let m2 = (y4 - emittingPointY) / (x4 - emittingPointX);
+        let m2 = (endPointY - emittingPointY) / (endPointX - emittingPointX);
 
         //if m1 is infinity or -infinity (vertical line) then set m1 to Number.MAX_VALUE
         if(m1 === Infinity || m1 === -Infinity){
