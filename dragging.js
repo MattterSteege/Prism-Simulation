@@ -216,6 +216,7 @@ function init() {
     s.addShape(new Rectangle(450, 400, 100, 100, '#fb5607'));
     //s.addShape(new Line(700, 700, -33, 141, 5, '#ff006e'));
     s.addShape(new Circle(331, 350, 50, '#8338ec'));
+    //s.addShape(new Text(50, 50, '20px Arial', '#fff', 'Drag me!'));
 
     s.addRay(new Ray(101, 100, 45, 687, '#888'));
 }

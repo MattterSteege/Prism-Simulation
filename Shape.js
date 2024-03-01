@@ -97,12 +97,22 @@ Shape.prototype.intersectRay = function(ray, shape) {
         let distance1 = Math.sqrt(Math.pow(normal[0].x2 - emittingPointX, 2) + Math.pow(normal[0].y2 - emittingPointY, 2));
         let distance2 = Math.sqrt(Math.pow(normal[1].x2 - emittingPointX, 2) + Math.pow(normal[1].y2 - emittingPointY, 2));
 
+        let normals = []
+        if(distance1 < distance2){
+            normals.push(normal[0]);
+            normals.push(normal[1]);
+        }
+        else{
+            normals.push(normal[1]);
+            normals.push(normal[0]);
+        }
+
         return {
             xStart: emittingPointX,
             yStart: emittingPointY,
             xEnd: xIntersection,
             yEnd: yIntersection,
-            normal: (distance1 < distance2) ? normal[0] : normal[1]
+            normals: normals
         };
     }
 }

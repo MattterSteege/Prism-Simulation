@@ -37,3 +37,5 @@
   - Er is nu een 'gebruiker' waarin je verschillende dingen kan instellen.
 - 29-2-2024 8:51 (+30 minuten)
   - Je kan nu instellen hoeveel lichtberekeningen er maximaal gedaan mogen worden, dit werkt ook al, nu alleen nog de hoek van elk deel van dfe lichtstraal berekenen en verwerken in de berekeningen.
+- 1-3-2024 19:17 (+60 minuten)
+  - De normaal wordt nu in een groot deel van de keren goed berekend, maar mijn god wat zijn er veel versie, (van rechts boven naar links onder, van links onder naar rechts boven, etc.)
