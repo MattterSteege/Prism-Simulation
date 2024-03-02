@@ -63,30 +63,50 @@ Ray.prototype.draw = async function (ctx) {
         ctx.stroke();
         ctx.closePath();
 
+        if (!rayPart.normals) return;
+
+        let angleOfNormal = Math.atan2(rayPart.normals[0].y2 - rayPart.normals[0].y1, rayPart.normals[0].x2 - rayPart.normals[0].x1);
+        let angleOfRay = Math.atan2(rayPart.yEnd - rayPart.yStart, rayPart.xEnd - rayPart.xStart);
+        if (angleOfNormal < 0) angleOfNormal += 2 * Math.PI;
+        if (angleOfRay < 0) angleOfRay += 2 * Math.PI;
+
+        //create the smallest possible arc between the two angles
+        let startAngle = angleOfRay + Math.PI;
+        let endAngle = angleOfNormal;
+        let difference = endAngle - startAngle;
+        let counterClockwise = false;
+        if (startAngle > endAngle) {
+            counterClockwise = true;
+
+            if (startAngle - endAngle > Math.PI) {
+                let temp = startAngle;
+                startAngle = endAngle;
+                endAngle = temp;
+                difference = endAngle - startAngle;
+
+                if (endAngle - (Math.PI * 2) > startAngle) {
+                    let temp = startAngle;
+                    startAngle = endAngle - (Math.PI * 2);
+                    endAngle = temp;
+                    difference = endAngle - startAngle;
+                }
+            }
+        }
+
         ctx.beginPath();
         ctx.strokeStyle = '#0f0';
-        if (rayPart.normals && user.showNormals) {
+        if (user.showNormals) {
             ctx.moveTo(rayPart.normals[0].x1, rayPart.normals[0].y1);
             ctx.lineTo(rayPart.normals[0].x2, rayPart.normals[0].y2);
-
-            let angleOfNormal = Math.atan2(rayPart.normals[0].y2 - rayPart.normals[0].y1, rayPart.normals[0].x2 - rayPart.normals[0].x1);
-            let angleOfRay = Math.atan2(rayPart.yEnd - rayPart.yStart, rayPart.xEnd - rayPart.xStart);
-            if (angleOfNormal < 0) angleOfNormal += 2 * Math.PI;
-            if (angleOfRay < 0) angleOfRay += 2 * Math.PI;
-
-            //create the smallest possible arc between the two angles
-            let startAngle = angleOfRay + Math.PI;
-            let endAngle = angleOfNormal;
-            let counterClockwise = false;
-            if (startAngle > endAngle) {
-                counterClockwise = true;
-            }
-
             ctx.moveTo(rayPart.xEnd, rayPart.yEnd);
             ctx.arc(rayPart.xEnd, rayPart.yEnd, 20, startAngle, endAngle, counterClockwise);
         }
         ctx.stroke();
         ctx.closePath();
+
+        let outAngle = this.calculateAngle(difference, this.waveLength, 1, 1.5);
+        this.RayParts[i].nextAngle = outAngle;
+        console.log("The in ray angle is " + difference + " and the out ray angle is " + outAngle);
 
         if (user.doStagedDraw > 0)
             await delay(user.doStagedDraw)
@@ -94,12 +114,17 @@ Ray.prototype.draw = async function (ctx) {
 }
 
 Ray.prototype.calculateRay = function(shapes){
+    //make a reference by value
     var ray = this;
+    ray = Object.assign({}, ray); //clone the object
     var rayParts = ray.RayParts;
     var maxDistance = 10000;
     var closestIntersection = null;
     var closestShape = null;
     var closestDistance = maxDistance;
+
+    ray.angleRadians = this.RayParts.length > 0 ? DegreesToRadians(this.RayParts[this.RayParts.length - 1].nextAngle) : ray.angleRadians;
+    console.log(ray.angleRadians, this.angleRadians, this.RayParts.length > 0 ? this.RayParts[this.RayParts.length - 1].nextAngle : "no previous angle, so using " + this.angleDegrees);
 
     shapes.forEach(function(shape){
         if (shape.constructor.name === "Ray" || shape.constructor.name === "Text") return;

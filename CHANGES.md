@@ -39,3 +39,5 @@
   - Je kan nu instellen hoeveel lichtberekeningen er maximaal gedaan mogen worden, dit werkt ook al, nu alleen nog de hoek van elk deel van dfe lichtstraal berekenen en verwerken in de berekeningen.
 - 1-3-2024 19:17 (+60 minuten)
   - De normaal wordt nu in een groot deel van de keren goed berekend, maar mijn god wat zijn er veel versie, (van rechts boven naar links onder, van links onder naar rechts boven, etc.)
+- 2-3-2024 19:22 (+120 minuten)
+  - het begin met het berekenen van de lichtbreking is er, maar het werkt nog niet volledig.
