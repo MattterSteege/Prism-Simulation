@@ -129,3 +129,24 @@ function dotProduct(a, b){
 
 //==============================================================================
 const delay = ms => new Promise(res => setTimeout(res, ms));
+
+//==============================================================================
+function normalizeDegreeAngle(angle){
+    //make angle between 0 and 360 (-45 would be 315)
+    while(angle <= 0){
+        angle += 360;
+    }
+    while(angle >= 360){
+        angle -= 360;
+    }
+    return angle;
+}
+
+//==============================================================================
+function calculateTotalCalulations(){
+    //shapes * user.maxLightBounces * rays
+    var shapes = s.shapes.length;
+    var rays = s.rays.length;
+    var totalCalculations = user.maxLightBounces;
+    return shapes * totalCalculations * rays;
+}

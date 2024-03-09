@@ -1,4 +1,4 @@
-const CircleResolutions = 100;
+const CircleResolutions = 1000;
 
 //Class Circle
 Circle.prototype = new Shape();
