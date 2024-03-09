@@ -19,11 +19,13 @@ function Ray(x, y, angle, waveLength, fill) {
         }
     });
     this.angleDegrees = angle || 0;
-    this.waveLength = waveLength || 1;
+    this.waveLength = waveLength || 500;
     this.fill = fill || '#AAAAAA';
 
     this.updatePoints();
     this.RayParts = [];
+
+    this.isInsideObject = false;
 }
 
 let check = 0;
@@ -46,10 +48,16 @@ Ray.prototype.draw = async function (ctx) {
     ctx.closePath();
     ctx.fill();
 
+    s.shapes.forEach((shape) => {
+        if (shape.contains(this.emittingPoint.x, this.emittingPoint.y)) {
+            this.isInsideObject = true;
+        }
+    });
+
     const CurrentCheck = check;
+    user.showDebug ? console.clear() : null;
     for (let i = 0; i < user.maxLightBounces - 1; i++) {
         if (CurrentCheck !== check) return;
-
         this.calculateRay(s.shapes);
         ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
 
@@ -93,6 +101,8 @@ Ray.prototype.draw = async function (ctx) {
             }
         }
 
+        difference = Math.abs(difference);
+
         ctx.beginPath();
         ctx.strokeStyle = '#0f0';
         if (user.showNormals) {
@@ -104,12 +114,16 @@ Ray.prototype.draw = async function (ctx) {
         ctx.stroke();
         ctx.closePath();
 
-        let outAngle = this.calculateAngle(difference, this.waveLength, 1, 1.5);
-        this.RayParts[i].nextAngle = outAngle;
-        console.log("The in ray angle is " + difference + " and the out ray angle is " + outAngle);
+
+
+        const refraction = this.calculateRefractedAngle(getAirIndex(this.waveLength), getSellmeierValue(this.waveLength), RadiansToDegrees(difference));
+
+        this.RayParts[i].nextAngle = normalizeDegreeAngle(RadiansToDegrees(angleOfNormal) - 180 + refraction.angleToAdd);
 
         if (user.doStagedDraw > 0)
             await delay(user.doStagedDraw)
+
+        this.isInsideObject = !this.isInsideObject;
     }
 }
 
@@ -124,7 +138,6 @@ Ray.prototype.calculateRay = function(shapes){
     var closestDistance = maxDistance;
 
     ray.angleRadians = this.RayParts.length > 0 ? DegreesToRadians(this.RayParts[this.RayParts.length - 1].nextAngle) : ray.angleRadians;
-    console.log(ray.angleRadians, this.angleRadians, this.RayParts.length > 0 ? this.RayParts[this.RayParts.length - 1].nextAngle : "no previous angle, so using " + this.angleDegrees);
 
     shapes.forEach(function(shape){
         if (shape.constructor.name === "Ray" || shape.constructor.name === "Text") return;
@@ -164,9 +177,35 @@ Ray.prototype.updatePoints = function(){
     this.emittingPoint = {x: (rot[1].x + rot[2].x) / 2, y: (rot[1].y + rot[2].y) / 2};
 }
 
-Ray.prototype.calculateAngle = function(incidentAngle, wavelength, refractiveIndexOutside, refractiveIndexInside) {
-    const incidentAngleRad = incidentAngle * (Math.PI / 180); // Convert angle to radians
-    const refractiveIndexInsideWavelength = refractiveIndexInside + (wavelength - 500) * 0.0001; // Calculate refractive index for the specific wavelength
-    const refractedAngleRad = Math.asin((Math.sin(incidentAngleRad) * refractiveIndexOutside) / refractiveIndexInsideWavelength); // Calculate refracted angle in radians
-    return refractedAngleRad * (180 / Math.PI); // Convert refracted angle back to degrees
+Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
+    // Convert angle to radians for calculations
+    const radiansIncidence = angleIncidence * Math.PI / 180;
+
+    // Check if n2 is greater than n1 (critical angle check)
+    if (n2 > n1) {
+        const criticalAngle = Math.asin(n1 / n2) * 180 / Math.PI;
+        if (angleIncidence > criticalAngle) {
+            throw new Error("Angle of incidence exceeds critical angle for total internal reflection");
+        }
+    }
+
+    // Apply Snell's law and convert back to degrees
+    const angleRefraction = Math.asin(n1 * Math.sin(radiansIncidence) / n2) * 180 / Math.PI;
+
+    // Calculate angle to be added
+    const angleToAdd = angleRefraction - angleIncidence;
+
+    return {
+        angleRefraction,
+        angleToAdd,
+    };
+};
+
+Ray.prototype.calculateCriticalAngle = function(n1, n2) {  // Check if n1 is greater than n2 (critical angle requires n1 > n2)
+    if (n1 <= n2) {
+        console.error("Material A (n1) must have a higher refractive index than material B (n2), but if we switch the values this would be the ouput:");
+        return Math.asin(n1 / n2) * 180 / Math.PI;
+    }
+    // Apply formula for critical angle and convert to degrees
+    return Math.asin(n2 / n1) * 180 / Math.PI;
 }

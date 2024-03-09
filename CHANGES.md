@@ -41,3 +41,7 @@
   - De normaal wordt nu in een groot deel van de keren goed berekend, maar mijn god wat zijn er veel versie, (van rechts boven naar links onder, van links onder naar rechts boven, etc.)
 - 2-3-2024 19:22 (+120 minuten)
   - het begin met het berekenen van de lichtbreking is er, maar het werkt nog niet volledig.
+- 9-3-2024 17:09 (+240 minuten)
+  - De berekening van de lichtbreking werkt nu, alle brekinsindexen worden nu berekend op basis van golflengte t.o.v. lucht en glas door middel van de formule van Sellmeier.
+  - De code is beter geoptimaliseerd, en max nu op ongeveer 90.000 lichtberekeningen, dit staat gelijk aan 110 lichtbronnen, 100 vormen en een maximum van 10 lichtbrekingsberekeningen per lichtbron. (voorheen was het maximum een magere 100 lichtberekeningen, dus een verbetering van 900x)
+  - licht weet nu of het in een object zit of niet, dan weet ik welke berekeningen ik moet doen.
