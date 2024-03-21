@@ -23,7 +23,6 @@ function Ray(x, y, angle, waveLength, fill) {
     this.fill = fill || '#AAAAAA';
 
     this.updatePoints();
-    this.RayParts = [];
 
     this.isInsideObject = false;
 }
@@ -32,9 +31,10 @@ let check = 0;
 
 // Draws this line to a given context
 Ray.prototype.draw = async function (ctx) {
-    check = Math.random();
     this.updatePoints();
-    this.RayParts = [];
+    let rayParts = this.calculateRay(s.shapes);
+
+    check = Math.random();
 
     //draw the lamp
     ctx.fillStyle = this.fill;
@@ -55,120 +55,79 @@ Ray.prototype.draw = async function (ctx) {
     });
 
     const CurrentCheck = check;
-    user.showDebug ? console.clear() : null;
-    for (let i = 0; i < user.maxLightBounces - 1; i++) {
+    rayParts.forEach((rayPart, i) => {
         if (CurrentCheck !== check) return;
-        this.calculateRay(s.shapes);
+
+        ctx.beginPath();
         ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
-
-        let rayPart = this.RayParts[i];
-        if (!rayPart) return;
-
-        ctx.beginPath();
-        ctx.strokeStyle = '#f00';
-        ctx.moveTo(rayPart.xStart, rayPart.yStart);
-        ctx.lineTo(rayPart.xEnd, rayPart.yEnd);
+        ctx.moveTo(rayPart.from.x, rayPart.from.y);
+        ctx.lineTo(rayPart.to.x, rayPart.to.y);
         ctx.stroke();
         ctx.closePath();
 
-        if (!rayPart.normals) return;
+        if (user.showNormals && rayPart.normal) {
+            //the angle of the normal is rayPart.normal
+            const length = 50;
 
-        let angleOfNormal = Math.atan2(rayPart.normals[0].y2 - rayPart.normals[0].y1, rayPart.normals[0].x2 - rayPart.normals[0].x1);
-        let angleOfRay = Math.atan2(rayPart.yEnd - rayPart.yStart, rayPart.xEnd - rayPart.xStart);
-        if (angleOfNormal < 0) angleOfNormal += 2 * Math.PI;
-        if (angleOfRay < 0) angleOfRay += 2 * Math.PI;
+            const x2 = rayPart.to.x + length * Math.cos(rayPart.normal * Math.PI / 180);
+            const y2 = rayPart.to.y + length * Math.sin(rayPart.normal * Math.PI / 180);
 
-        //create the smallest possible arc between the two angles
-        let startAngle = angleOfRay + Math.PI;
-        let endAngle = angleOfNormal;
-        let difference = endAngle - startAngle;
-        let counterClockwise = false;
-        if (startAngle > endAngle) {
-            counterClockwise = true;
-
-            if (startAngle - endAngle > Math.PI) {
-                let temp = startAngle;
-                startAngle = endAngle;
-                endAngle = temp;
-                difference = endAngle - startAngle;
-
-                if (endAngle - (Math.PI * 2) > startAngle) {
-                    let temp = startAngle;
-                    startAngle = endAngle - (Math.PI * 2);
-                    endAngle = temp;
-                    difference = endAngle - startAngle;
-                }
-            }
+            ctx.beginPath();
+            ctx.strokeStyle = "white";
+            ctx.moveTo(rayPart.to.x, rayPart.to.y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.closePath();
         }
-
-        difference = Math.abs(difference);
-
-        ctx.beginPath();
-        ctx.strokeStyle = '#0f0';
-        if (user.showNormals) {
-            ctx.moveTo(rayPart.normals[0].x1, rayPart.normals[0].y1);
-            ctx.lineTo(rayPart.normals[0].x2, rayPart.normals[0].y2);
-            ctx.moveTo(rayPart.xEnd, rayPart.yEnd);
-            ctx.arc(rayPart.xEnd, rayPart.yEnd, 20, startAngle, endAngle, counterClockwise);
-        }
-        ctx.stroke();
-        ctx.closePath();
-
-
-
-        const refraction = this.calculateRefractedAngle(getAirIndex(this.waveLength), getSellmeierValue(this.waveLength), RadiansToDegrees(difference));
-
-        this.RayParts[i].nextAngle = normalizeDegreeAngle(RadiansToDegrees(angleOfNormal) - 180 + refraction.angleToAdd);
-
-        if (user.doStagedDraw > 0)
-            await delay(user.doStagedDraw)
-
-        this.isInsideObject = !this.isInsideObject;
-    }
+    });
 }
 
 Ray.prototype.calculateRay = function(shapes){
-    //make a reference by value
-    var ray = this;
-    ray = Object.assign({}, ray); //clone the object
-    var rayParts = ray.RayParts;
-    var maxDistance = 10000;
-    var closestIntersection = null;
-    var closestShape = null;
-    var closestDistance = maxDistance;
+    let rayParts = [];
+    rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
 
-    ray.angleRadians = this.RayParts.length > 0 ? DegreesToRadians(this.RayParts[this.RayParts.length - 1].nextAngle) : ray.angleRadians;
+    for (let i = 0; i < user.maxLightBounces; i++) {
+        let closestIntersection = null;
+        let closestShape = null;
+        let closestDistance = 10000;
+        let closestNormals = null;
 
-    shapes.forEach(function(shape){
-        if (shape.constructor.name === "Ray" || shape.constructor.name === "Text") return;
-        var intersection = shape.intersectRay(ray, shape);
-        if(intersection){
-            intersection.forEach(function(intersect){
-                var distance = Math.sqrt(Math.pow(intersect.xEnd - ray.emittingPoint.x, 2) + Math.pow(intersect.yEnd - ray.emittingPoint.y, 2));
-                if(distance < closestDistance){
-                    closestDistance = distance;
-                    closestIntersection = intersect;
-                    closestShape = shape;
-                }
-            });
+        let intersections = [];
+
+        shapes.forEach((shape) => {
+            const intersection = shape.intersectRay(rayParts[rayParts.length - 1], shape);
+            if (intersection)
+                intersections.push(intersection);
+        });
+
+        if(intersections.length === 0) break;
+
+        intersections.forEach((intersection) => {
+            const distance = Math.sqrt(Math.pow(intersection.to.x - this.emittingPoint.x, 2) + Math.pow(intersection.to.y - this.emittingPoint.y, 2));
+            if (distance < closestDistance) {
+                closestIntersection = intersection;
+                closestDistance = distance;
+                closestShape = intersection.shape;
+                closestNormals = intersection.normals;
+            }
+        });
+
+        if (closestIntersection) {
+            rayParts.push(closestIntersection);
+        } else {
+            rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
+            break;
         }
-    });
-
-    if(closestIntersection){
-        rayParts.push(closestIntersection);
-    }else{
-        //if the previous ray part does not have a normal, break (the ray is outside the canvas)
-        if(rayParts.length > 0 && !rayParts[rayParts.length - 1].normals)
-            return;
-
-        let x1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].xEnd : ray.emittingPoint.x;
-        let y1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].yEnd : ray.emittingPoint.y;
-        const x2 = x1 + 10000 * Math.cos(this.angleRadians);
-        const y2 = y1 + 10000 * Math.sin(this.angleRadians);
-        rayParts.push({xStart: x1, yStart: y1, xEnd: x2, yEnd: y2});
     }
 
-    ray.RayParts = rayParts;
+    //remove the first part of the ray array
+    rayParts.shift();
+
+    if (rayParts.length === 0) {
+        rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
+    }
+
+    return rayParts;
 }
 
 Ray.prototype.updatePoints = function(){

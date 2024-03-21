@@ -45,3 +45,11 @@
   - De berekening van de lichtbreking werkt nu, alle brekinsindexen worden nu berekend op basis van golflengte t.o.v. lucht en glas door middel van de formule van Sellmeier.
   - De code is beter geoptimaliseerd, en max nu op ongeveer 90.000 lichtberekeningen, dit staat gelijk aan 110 lichtbronnen, 100 vormen en een maximum van 10 lichtbrekingsberekeningen per lichtbron. (voorheen was het maximum een magere 100 lichtberekeningen, dus een verbetering van 900x)
   - licht weet nu of het in een object zit of niet, dan weet ik welke berekeningen ik moet doen.
+- 10-3-2024 17:09 (+60 minuten)
+  - Bugs verholpen met de lichtbreking, maar werkt nog niet volledig.
+- 13-3-2024 17:09 (+120 minuten)
+  - De lichtbreking werkt nu volledig, maar de reflectie nog niet.
+- 14-3-2024 17:09 (+60 minuten)
+  - De reflectie werkt nu ook, maar de absorptie nog niet.
+- 21-3-2024 17:09 (+180 minuten)
+  - Ik ben begonnen met opnieuw schrijven van de code voor het berekenen van de licht stralen, ik kon er geen chocola meer van maken.

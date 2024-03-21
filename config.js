@@ -4,7 +4,7 @@ const _user = {
     showIntersections: false,
     doStagedDraw: 0, //0 is off !0 is the ms to wait before drawing the next ray
 
-    maxLightBounces: 10,
+    maxLightBounces: 1,
 }
 
 const handler = {

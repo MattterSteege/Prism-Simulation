@@ -1,119 +1,122 @@
 function Shape() {}
 
 Shape.prototype.intersectRay = function(ray, shape) {
-    const angleRadians = ray.angleRadians;
-    //if ray.Rayparts is not empty, then use the last point as the start point
-    let x1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].xEnd : ray.emittingPoint.x;
-    let y1 = ray.RayParts.length > 0 ? ray.RayParts[ray.RayParts.length - 1].yEnd : ray.emittingPoint.y;
-    x1 += 0.0001 * Math.cos(angleRadians);
-    y1 += 0.0001 * Math.sin(angleRadians);
-    const x2 = x1 + 10000 * Math.cos(angleRadians);
-    const y2 = y1 + 10000 * Math.sin(angleRadians);
+    //ray
+    const x1 = ray.from.x
+    const y1 = ray.from.y
+    const x2 = ray.to.x;
+    const y2 = ray.to.y;
+    const angleRadians = Math.atan2(y2 - y1, x2 - x1);
+
+    //shape
+    const points = shape.points;
+    const n = points.length;
 
     let intersections = [];
 
-    if (shape.points.length > 2) {
-        //check if the ray intersects x1y1 to x2y2
-        shape.points.forEach(function(point, index){
-            const nextIndex = index === shape.points.length - 1 ? 0 : index + 1;
+    if (n > 2) {
+        //loop through all the edges
+        let _x1, _y1, _x2, _y2,
+            _x3, _y3, _x4, _y4;
 
-            //check if the ray intersects x1y1 to x2y2
-            const intersection = intersectLines(point.x, point.y, shape.points[nextIndex].x, shape.points[nextIndex].y, x1, y1, x2, y2);
-            if(intersection){
-                intersections.push(intersection);
-            }
-        });
-    }
-    else if (shape.points.length === 2) {
-        const intersection = intersectLines(shape.points[0].x, shape.points[0].y, shape.points[1].x, shape.points[1].y, x1, y1, x2, y2);
-        if(intersection){
-            intersections.push(intersection);
+        for (let i = 0; i < n; i++) {
+            _x1 = points[i].x;
+            _y1 = points[i].y;
+            _x2 = points[(i + 1) % n].x;
+            _y2 = points[(i + 1) % n].y;
+
+            _x3 = x1;
+            _y3 = y1;
+            _x4 = x2;
+            _y4 = y2;
+
+            const intersection = VectorIntersectsVector(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4);
+            if (intersection) intersections.push(intersection);
         }
     }
 
-    if(intersections.length === 0){
-        return null;
+    if (n === 2) {
+        //loop through all the edges
+        let _x1, _y1, _x2, _y2,
+            _x3, _y3, _x4, _y4;
+
+        _x1 = points[0].x;
+        _y1 = points[0].y;
+        _x2 = points[1].x;
+        _y2 = points[1].y;
+
+        _x3 = x1;
+        _y3 = y1;
+        _x4 = x2;
+        _y4 = y2;
+
+        const intersection = VectorIntersectsVector(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4);
+        if (intersection) intersections.push(intersection);
     }
 
-    //if the intersection is behind the ray, then remove it
-    intersections = intersections.filter(function(intersection){
-        return (intersection.xEnd - x1) * Math.cos(angleRadians) + (intersection.yEnd - y1) * Math.sin(angleRadians) > 0;
+    if (intersections.length === 0) {
+        return;
+    }
+
+    let closestIntersection = null;
+    let closestDistance = 10000;
+
+    intersections.forEach((intersection) => {
+        const distance = Math.sqrt(Math.pow(intersection.x - x1, 2) + Math.pow(intersection.y - y1, 2));
+        if (distance < closestDistance) {
+            closestIntersection = intersection;
+            closestDistance = distance;
+        }
     });
 
-    return intersections;
+    //get the of the ray from [closestIntersection] to [from]
+    const angleOfRay = normalizeDegreeAngle(RadiansToDegrees(Math.atan2(y1 - closestIntersection.y, x1 - closestIntersection.x)));
+    const normal1 = normalizeDegreeAngle(closestIntersection.normals[0]);
+    const normal2 = normalizeDegreeAngle(closestIntersection.normals[1]);
 
-    function intersectLines(x1, y1, x2, y2, emittingPointX, emittingPointY, endPointX, endPointY) {
-        // Calculate slopes
-        let m1 = (y2 - y1) / (x2 - x1);
-        let m2 = (endPointY - emittingPointY) / (endPointX - emittingPointX);
+    //check which is closer and set closestIntersection.normals to that
+    if (getClosestNumber(angleOfRay, [normal1, normal2]) === normal1) {
+        closestIntersection.normals = normal1;
+    } else {
+        closestIntersection.normals = normal2;
+    }
 
-        //if m1 is infinity or -infinity (vertical line) then set m1 to Number.MAX_VALUE
-        if(m1 === Infinity || m1 === -Infinity){
-            m1 = 1_000_000_000;
-        }
-        //if m2 is infinity or -infinity (vertical line) then set m2 to Number.MAX_VALUE
-        if(m2 === Infinity || m2 === -Infinity){
-            m2 = 1_000_000_000;
-        }
+    return {
+        from: {
+            x: x1,
+            y: y1
+        },
+        to: {
+            x: closestIntersection.x,
+            y: closestIntersection.y
+        },
+        shape: shape,
+        normal: closestIntersection.normals
+    };
 
-        // Check if lines are parallel (no intersection)
-        if (m1 === m2)
-            return null;
-
-        // Calculate intersection point
-        let xIntersection = (m1 * x1 - m2 * emittingPointX + emittingPointY - y1) / (m1 - m2);
-        let yIntersection = m1 * (xIntersection - x1) + y1;
-
-        //check if xIntersection is within the point range
-        if(x1 < x2 && (xIntersection < x1 || xIntersection > x2)){
-            return null;
-        }
-        if(x1 > x2 && (xIntersection > x1 || xIntersection < x2)){
-            return null;
-        }
-        if(y1 < y2 && (yIntersection < y1 || yIntersection > y2)){
-            return null;
-        }
-        if(y1 > y2 && (yIntersection > y1 || yIntersection < y2)){
-            return null;
+    function VectorIntersectsVector(x1, y1, x2, y2, x3, y3, x4, y4) {
+        const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (den === 0) {
+            return;
         }
 
-        //create a normal and follow this step plan:
-        //1. get the angle of the line
-        //2. add 90 degrees to the angle
-        //3. draw 2 lines from the intersection point to the left and right
-        //4. check which of the goes in the direction of the start point of the ray
-        //5. log all the data from this step plan
+        const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den;
+        const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den;
 
-        let angle = Math.atan2(y2 - y1, x2 - x1); //angle in radians
-        angle = RadiansToDegrees(angle); //angle in degrees
-        angle -= 90;
-        angle %= 360;
-        angle = DegreesToRadians(angle);
+        const angleDegrees1 = RadiansToDegrees(Math.atan2(y2 - y1, x2 - x1)) + 90;
+        const angleDegrees2 = RadiansToDegrees(Math.atan2(y2 - y1, x2 - x1)) - 90;
 
-        let normal = [{x1: xIntersection, y1: yIntersection, x2: xIntersection + 50 * Math.cos(angle), y2: yIntersection + 50 * Math.sin(angle)}, {x1: xIntersection, y1: yIntersection, x2: xIntersection + 50 * Math.cos(angle + Math.PI), y2: yIntersection + 50 * Math.sin(angle + Math.PI)}];
 
-        //check which is pointing to emittingPointX, emittingPointY (closest)
-        let distance1 = Math.sqrt(Math.pow(normal[0].x2 - emittingPointX, 2) + Math.pow(normal[0].y2 - emittingPointY, 2));
-        let distance2 = Math.sqrt(Math.pow(normal[1].x2 - emittingPointX, 2) + Math.pow(normal[1].y2 - emittingPointY, 2));
-
-        let normals = []
-        if(distance1 < distance2){
-            normals.push(normal[0]);
-            normals.push(normal[1]);
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+            return {
+                x: x1 + t * (x2 - x1),
+                y: y1 + t * (y2 - y1),
+                normals: [
+                    angleDegrees1,
+                    angleDegrees2
+                ]
+            };
         }
-        else{
-            normals.push(normal[1]);
-            normals.push(normal[0]);
-        }
-
-        return {
-            xStart: emittingPointX,
-            yStart: emittingPointY,
-            xEnd: xIntersection,
-            yEnd: yIntersection,
-            normals: normals
-        };
     }
 }
 
