@@ -108,7 +108,7 @@ Ray.prototype.calculateRay = function(shapes){
                 closestIntersection = intersection;
                 closestDistance = distance;
                 closestShape = intersection.shape;
-                closestNormals = intersection.normals;
+                closestNormals = intersection.normal;
             }
         });
 
@@ -118,6 +118,12 @@ Ray.prototype.calculateRay = function(shapes){
             rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
             break;
         }
+
+        const angle_normal = closestNormals
+        const angle_ray = normalizeDegreeAngle(RadiansToDegrees(Math.atan2(closestIntersection.from.y - closestIntersection.to.y, closestIntersection.from.x - closestIntersection.to.x)));
+        const diff = Math.abs(angle_normal - angle_ray)
+        const nextRefractionAngle = this.calculateRefractedAngle(1, 1.5, diff)
+        console.log(nextRefractionAngle, diff, angle_ray,angle_normal)
     }
 
     //remove the first part of the ray array
@@ -144,7 +150,9 @@ Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
     if (n2 > n1) {
         const criticalAngle = Math.asin(n1 / n2) * 180 / Math.PI;
         if (angleIncidence > criticalAngle) {
-            throw new Error("Angle of incidence exceeds critical angle for total internal reflection");
+            return {
+                totalInteralReflection: true
+            }
         }
     }
 
