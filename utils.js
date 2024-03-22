@@ -150,3 +150,17 @@ function calculateTotalCalulations(){
     var totalCalculations = user.maxLightBounces;
     return shapes * totalCalculations * rays;
 }
+
+//==============================================================================
+function getClosestNumber(number, array) {
+    var closest = array[0];
+    var closestDiff = Math.abs(number - closest);
+    for(var i = 1; i < array.length; i++){
+        var diff = Math.abs(number - array[i]);
+        if(diff < closestDiff){
+            closest = array[i];
+            closestDiff = diff;
+        }
+    }
+    return closest;
+}
