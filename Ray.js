@@ -86,6 +86,8 @@ Ray.prototype.calculateRay = function(shapes){
     let rayParts = [];
     rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
 
+    let isInsideObject = this.isInsideObject;
+
     for (let i = 0; i < user.maxLightBounces; i++) {
         let closestIntersection = null;
         let closestShape = null;
@@ -94,8 +96,9 @@ Ray.prototype.calculateRay = function(shapes){
 
         let intersections = [];
 
+        const lastRayPart = rayParts.length === 0 ? firstRay : rayParts[rayParts.length - 1];
         shapes.forEach((shape) => {
-            const intersection = shape.intersectRay(rayParts[rayParts.length - 1], shape);
+            const intersection = shape.intersectRay(lastRayPart, shape);
             if (intersection)
                 intersections.push(intersection);
         });
@@ -103,7 +106,7 @@ Ray.prototype.calculateRay = function(shapes){
         if(intersections.length === 0) break;
 
         intersections.forEach((intersection) => {
-            const distance = Math.sqrt(Math.pow(intersection.to.x - this.emittingPoint.x, 2) + Math.pow(intersection.to.y - this.emittingPoint.y, 2));
+            const distance = Math.sqrt(Math.pow(intersection.to.x - intersection.from.x, 2) + Math.pow(intersection.to.y - intersection.from.y, 2));
             if (distance < closestDistance) {
                 closestIntersection = intersection;
                 closestDistance = distance;
@@ -113,26 +116,53 @@ Ray.prototype.calculateRay = function(shapes){
         });
 
         if (closestIntersection) {
-            rayParts.push(closestIntersection);
+            rayParts[rayParts.length - 1] = closestIntersection;
         } else {
-            rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
+            rayParts[rayParts.length - 1] = {from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}};
             break;
         }
 
         const angle_normal = closestNormals
         const angle_ray = normalizeDegreeAngle(RadiansToDegrees(Math.atan2(closestIntersection.from.y - closestIntersection.to.y, closestIntersection.from.x - closestIntersection.to.x)));
-        const diff = Math.abs(angle_normal - angle_ray)
-        const nextRefractionAngle = this.calculateRefractedAngle(1, 1.5, diff)
-        console.log(nextRefractionAngle, diff, angle_ray,angle_normal)
-    }
+        const diff = angle_normal - angle_ray
+        const nextRefractionAngle = this.calculateRefractedAngle(isInsideObject ? 1.5 : 1 , isInsideObject ? 1 : 1.5, Math.abs(diff))
+        //console.log(nextRefractionAngle, diff, angle_ray, angle_normal)
+        rayParts[rayParts.length - 1].refraction = {nextRefractionAngle, diff, angle_ray, angle_normal};
 
-    //remove the first part of the ray array
-    rayParts.shift();
+        if (!nextRefractionAngle.totalInteralReflection){
+            let newAngle = normalizeDegreeAngle(angle_normal + 180 + nextRefractionAngle.angleToAdd);
+            let newRay = {
+                from: closestIntersection.to,
+                to: {
+                    x: closestIntersection.to.x + 10000 * Math.cos(newAngle * Math.PI / 180),
+                    y: closestIntersection.to.y + 10000 * Math.sin(newAngle * Math.PI / 180),
+                }
+            }
+
+            rayParts.push(newRay);
+        }
+        else {
+            let newAngle = normalizeDegreeAngle(angle_normal + diff);
+            let newRay = {
+                from: closestIntersection.to,
+                to: {
+                    x: closestIntersection.to.x + 10000 * Math.cos(newAngle * Math.PI / 180),
+                    y: closestIntersection.to.y + 10000 * Math.sin(newAngle * Math.PI / 180),
+                }
+            }
+
+            rayParts.push(newRay);
+        }
+
+        isInsideObject = !isInsideObject;
+    }
 
     if (rayParts.length === 0) {
         rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
     }
 
+    this.RayParts = rayParts;
+    console.log(rayParts)
     return rayParts;
 }
 

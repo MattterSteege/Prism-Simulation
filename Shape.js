@@ -2,11 +2,13 @@ function Shape() {}
 
 Shape.prototype.intersectRay = function(ray, shape) {
     //ray
-    const x1 = ray.from.x
-    const y1 = ray.from.y
+    const angleRadians = Math.atan2(ray.to.y - ray.from.y, ray.to.x - ray.from.x);
+    const tinyMovement = 0.1; // Define a very small movement value
+    const x1 = ray.from.x + tinyMovement * Math.cos(angleRadians); // Move x1 slightly closer to x2
+    const y1 = ray.from.y + tinyMovement * Math.sin(angleRadians); // Move y1 slightly closer to y2
     const x2 = ray.to.x;
     const y2 = ray.to.y;
-    const angleRadians = Math.atan2(y2 - y1, x2 - x1);
+
 
     //shape
     const points = shape.points;
@@ -80,6 +82,9 @@ Shape.prototype.intersectRay = function(ray, shape) {
     } else {
         closestIntersection.normals = normal2;
     }
+
+    //check if the ray is hitting the shape from the inside
+
 
     return {
         from: {
