@@ -125,12 +125,13 @@ Ray.prototype.calculateRay = function(shapes){
         const angle_normal = closestNormals
         const angle_ray = normalizeDegreeAngle(RadiansToDegrees(Math.atan2(closestIntersection.from.y - closestIntersection.to.y, closestIntersection.from.x - closestIntersection.to.x)));
         const diff = angle_normal - angle_ray
-        const nextRefractionAngle = this.calculateRefractedAngle(isInsideObject ? 1.5 : 1 , isInsideObject ? 1 : 1.5, Math.abs(diff))
+        const nextRefractionAngle = this.calculateRefractedAngle(isInsideObject ? getSellmeierValue(this.waveLength) : getAirIndex(this.waveLength) , isInsideObject ? getAirIndex(this.waveLength) : getSellmeierValue(this.waveLength), diff)
         //console.log(nextRefractionAngle, diff, angle_ray, angle_normal)
         rayParts[rayParts.length - 1].refraction = {nextRefractionAngle, diff, angle_ray, angle_normal};
+        console.log(rayParts[rayParts.length - 1].refraction)
 
         if (!nextRefractionAngle.totalInteralReflection){
-            let newAngle = normalizeDegreeAngle(angle_normal + 180 + nextRefractionAngle.angleToAdd);
+            let newAngle = normalizeDegreeAngle(angle_normal + 180 + (nextRefractionAngle.angleToAdd * -1));
             let newRay = {
                 from: closestIntersection.to,
                 to: {
@@ -174,6 +175,8 @@ Ray.prototype.updatePoints = function(){
 
 Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
     // Convert angle to radians for calculations
+    const isNegative = angleIncidence < 0;
+    angleIncidence = Math.abs(angleIncidence);
     const radiansIncidence = angleIncidence * Math.PI / 180;
 
     // Check if n2 is greater than n1 (critical angle check)
@@ -189,12 +192,9 @@ Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
     // Apply Snell's law and convert back to degrees
     const angleRefraction = Math.asin(n1 * Math.sin(radiansIncidence) / n2) * 180 / Math.PI;
 
-    // Calculate angle to be added
-    const angleToAdd = angleRefraction - angleIncidence;
-
     return {
-        angleRefraction,
-        angleToAdd,
+        totalInteralReflection: false,
+        angleToAdd: isNegative ? -angleRefraction : angleRefraction
     };
 };
 
