@@ -212,11 +212,17 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(300, 750, 700, '#ffbe0b'));
-    s.addShape(new Rectangle(300, 300, 100, 100, '#fb5607'));
-    s.addShape(new Line(400, 600, -33, 141, 5, '#ff006e'));
-    s.addShape(new Circle(375, 500, 50, '#8338ec'));
+    s.addShape(new Triangle(300, 200, 700, '#ffbe0b'));
+    //s.addShape(new Rectangle(300, 300, 100, 100, '#fb5607'));
+    //s.addShape(new Line(400, 600, -33, 141, 5, '#ff006e'));
+    //s.addShape(new Circle(375, 500, 50, '#8338ec'));
     //s.addShape(new Text(50, 50, '20px Arial', '#fff', 'Drag me!'));
 
-    s.addRay(new Ray(200, 100, 60, 400, '#888'));
+    s.addRay(new Ray(200, 500, -10, 400, '#888'));
+    s.addRay(new Ray(200, 500, -10, 450, '#888'));
+    s.addRay(new Ray(200, 500, -10, 500, '#888'));
+    s.addRay(new Ray(200, 500, -10, 550, '#888'));
+    s.addRay(new Ray(200, 500, -10, 600, '#888'));
+    s.addRay(new Ray(200, 500, -10, 650, '#888'));
+    s.addRay(new Ray(200, 500, -10, 700, '#888'));
 }
