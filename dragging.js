@@ -98,6 +98,35 @@ function CanvasState(canvas) {
         myState.dragging = false;
     }, true);
 
+    //when user uses scroll wheel
+    canvas.addEventListener('wheel', function(e) {
+        //get which shape is under the mouse
+        var mouse = myState.getMouse(e);
+        var mx = mouse.x;
+        var my = mouse.y;
+        var shapes = myState.shapes;
+        var rays = myState.rays;
+        var l = shapes.length;
+        for (var i = l-1; i >= 0; i--) {
+            if (shapes[i].contains(mx, my)) {
+                var mySel = shapes[i];
+                console.log(e.deltaY);
+                mySel.angleDegrees += e.deltaY / 100;
+                mySel.updatePoints();
+                myState.valid = false;
+            }
+        }
+        if (rays[0].contains(mx, my)) {
+            rays.forEach(ray => {
+                ray.angleDegrees += e.deltaY / 100;
+                myState.valid = false;
+            });
+        }
+    }, true);
+
+    //when user uses 2 fingers to rotate
+
+
     // Add touch events
     canvas.addEventListener('touchstart', function(e) {
         // Prevent scrolling on touch devices
@@ -112,12 +141,21 @@ function CanvasState(canvas) {
 
     canvas.addEventListener('touchmove', function(e) {
         e.preventDefault();
-        var touch = e.touches[0];
-        var mouseEvent = new MouseEvent('mousemove', {
-            clientX: touch.clientX,
-            clientY: touch.clientY
-        });
-        canvas.dispatchEvent(mouseEvent);
+        if (e.touches.length === 1) {
+            var touch = e.touches[0];
+            var mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+        else if (e.touches.length === 2) {
+            var touch1 = e.touches[0];
+            var touch2 = e.touches[1];
+            var angle = Math.atan2(touch2.clientY - touch1.clientY, touch2.clientX - touch1.clientX);
+            myState.selection.angleRadians = angle;
+            myState.valid = false;
+        }
     }, false);
 
     canvas.addEventListener('touchend', function(e) {
@@ -212,10 +250,10 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(300, 200, 700, '#ffbe0b'));
-    //s.addShape(new Rectangle(300, 300, 100, 100, '#fb5607'));
-    //s.addShape(new Line(400, 600, -33, 141, 5, '#ff006e'));
-    //s.addShape(new Circle(375, 500, 50, '#8338ec'));
+    s.addShape(new Triangle(300, 200, 700, 0,'#ffbe0b'));
+    s.addShape(new Rectangle(200, 200, 100, 100,0,'#fb5607'));
+    s.addShape(new Line(400, 200, 100, 5, 0, '#ff006e'));
+    s.addShape(new Circle(600, 200, 50, '#8338ec'));
     //s.addShape(new Text(50, 50, '20px Arial', '#fff', 'Drag me!'));
 
     s.addRay(new Ray(200, 500, -10, 400, '#888'));

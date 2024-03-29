@@ -87,7 +87,8 @@ function rotatePointsAroundCenter(points, angle){
     return newPoints;
 }
 
-function rotatePoints(points, angleInRadians) {
+function rotatePoints(points, angleInDegrees) {
+    const angleInRadians = DegreesToRadians(angleInDegrees);
     // Calculate the center of the points
     const centerX = points.reduce((sum, point) => sum + point.x, 0) / points.length;
     const centerY = points.reduce((sum, point) => sum + point.y, 0) / points.length;

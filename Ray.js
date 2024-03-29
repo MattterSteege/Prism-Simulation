@@ -6,19 +6,7 @@ function Ray(x, y, angle, waveLength, fill) {
     this.y = y || 0;
     this.w = 50;
     this.h = 20;
-    // this.angleDegrees = angle || 0;
-    // this.angleRadians = Math.PI * this.angleDegrees / 180;
-    //every time this.angleDegrees is set, this.angleRadians should be updated
-    Object.defineProperty(this, 'angleDegrees', {
-        get: function() {
-            return this._angleDegrees;
-        },
-        set: function(value) {
-            this._angleDegrees = value;
-            this.angleRadians = Math.PI * value / 180;
-        }
-    });
-    this.angleDegrees = angle || 0;
+    this.angleDegrees =  normalizeDegreeAngle(angle || 0);
     this.waveLength = waveLength || 500;
     this.fill = fill || '#AAAAAA';
 
@@ -84,7 +72,8 @@ Ray.prototype.draw = async function (ctx) {
 
 Ray.prototype.calculateRay = function(shapes){
     let rayParts = [];
-    rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
+    const angleRadians = DegreesToRadians(this.angleDegrees);
+    rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(angleRadians)}});
 
     let isInsideObject = this.isInsideObject;
 
@@ -118,17 +107,27 @@ Ray.prototype.calculateRay = function(shapes){
         if (closestIntersection) {
             rayParts[rayParts.length - 1] = closestIntersection;
         } else {
-            rayParts[rayParts.length - 1] = {from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}};
+            rayParts[rayParts.length - 1] = {from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(angleRadians)}};
             break;
         }
+
+        //isInsideObject is true when the vector's center is inside an object
+        isInsideObject = false;
+        shapes.forEach((shape) => {
+            const x_center = (closestIntersection.from.x - closestIntersection.to.x) / 2;
+            const y_center = (closestIntersection.from.y - closestIntersection.to.y) / 2;
+            const x = closestIntersection.to.x + x_center;
+            const y = closestIntersection.to.y + y_center;
+            if (shape.contains(x, y)) {
+                isInsideObject = true;
+            }
+        });
 
         const angle_normal = closestNormals
         const angle_ray = normalizeDegreeAngle(RadiansToDegrees(Math.atan2(closestIntersection.from.y - closestIntersection.to.y, closestIntersection.from.x - closestIntersection.to.x)));
         const diff = angle_normal - angle_ray
         const nextRefractionAngle = this.calculateRefractedAngle(isInsideObject ? getSellmeierValue(this.waveLength) : getAirIndex(this.waveLength) , isInsideObject ? getAirIndex(this.waveLength) : getSellmeierValue(this.waveLength), diff)
-        //console.log(nextRefractionAngle, diff, angle_ray, angle_normal)
         rayParts[rayParts.length - 1].refraction = {nextRefractionAngle, diff, angle_ray, angle_normal};
-        console.log(rayParts[rayParts.length - 1].refraction)
 
         if (!nextRefractionAngle.totalInteralReflection){
             let newAngle = normalizeDegreeAngle(angle_normal + 180 + (nextRefractionAngle.angleToAdd * -1));
@@ -159,17 +158,16 @@ Ray.prototype.calculateRay = function(shapes){
     }
 
     if (rayParts.length === 0) {
-        rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(this.angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(this.angleRadians)}});
+        rayParts.push({from: this.emittingPoint, to: {x: this.emittingPoint.x + 10000 * Math.cos(angleRadians), y: this.emittingPoint.y + 10000 * Math.sin(angleRadians)}});
     }
 
     this.RayParts = rayParts;
-    console.log(rayParts)
     return rayParts;
 }
 
 Ray.prototype.updatePoints = function(){
     this.points = [{x: this.x, y: this.y}, {x: this.x + this.w, y: this.y}, {x: this.x + this.w, y: this.y + this.h}, {x: this.x, y: this.y + this.h}];
-    const rot = this.points = rotatePoints(this.points, this.angleRadians);
+    const rot = this.points = rotatePoints(this.points, this.angleDegrees);
     this.emittingPoint = {x: (rot[1].x + rot[2].x) / 2, y: (rot[1].y + rot[2].y) / 2};
 }
 

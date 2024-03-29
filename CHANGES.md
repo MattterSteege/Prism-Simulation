@@ -53,3 +53,6 @@
   - De reflectie werkt nu ook, maar de absorptie nog niet.
 - 21-3-2024 17:09 (+180 minuten)
   - Ik ben begonnen met opnieuw schrijven van de code voor het berekenen van de licht stralen, ik kon er geen chocola meer van maken.
+- 27-3-2024 (+200 minuten)
+  - De Prisma simulatie werkt nu bijn ahelemaal, niet alle reflectie zijn even correct, maar het idee staat
+  - Alle prisma's werken nu met verschillende golflengtes van licht, en de brekingsindexen zijn nu ook correct.

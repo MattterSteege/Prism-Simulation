@@ -2,11 +2,12 @@
 //Rectangle Class
 Rectangle.prototype = new Shape();
 Rectangle.prototype.constructor = Rectangle;
-function Rectangle(x, y, w, h, fill) {
+function Rectangle(x, y, w, h, angle, fill) {
     this.x = x || 0;
     this.y = y || 0;
     this.w = w || 1;
     this.h = h || 1;
+    this.angleDegrees =  normalizeDegreeAngle(angle || 0);
     this.fill = fill || '#AAAAAA';
 
     this.updatePoints();
@@ -36,4 +37,5 @@ Rectangle.prototype.contains = function(mx, my) {
 
 Rectangle.prototype.updatePoints = function(){
     this.points = [{x: this.x, y: this.y}, {x: this.x + this.w, y: this.y}, {x: this.x + this.w, y: this.y + this.h}, {x: this.x, y: this.y + this.h}];
+    this.points = rotatePoints(this.points, this.angleDegrees);
 }
