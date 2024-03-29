@@ -2,13 +2,12 @@
 Line.prototype = new Shape();
 Line.prototype.constructor = Line;
 
-function Line(x1, y1, angle, length, w, fill) {
+function Line(x1, y1, length, w, angle, fill) {
     this.x = x1 || 0;
     this.y = y1 || 0;
-    this.angleDegrees = angle || 0;
-    this.angleRadians = Math.PI * this.angleDegrees / 180;
     this.length = length || 1;
     this.w = w || 1;
+    this.angleDegrees =  normalizeDegreeAngle(angle || 0);
     this.fill = fill || '#AAAAAA';
 
     this.updatePoints();
@@ -29,6 +28,7 @@ Line.prototype.draw = function(ctx) {
 }
 
 Line.prototype.updatePoints = function(){
-    this.points = [{x: this.x, y: this.y}, {x: this.x + this.length, y: this.y}, {x: this.x + this.length, y: this.y + this.w}, {x: this.x, y: this.y + this.w}];
-    this.points = rotatePoints(this.points, this.angleRadians);
+    this.points = [{x: this.x, y: this.y}, {x: this.x + this.w, y: this.y}, {x: this.x + this.w, y: this.y + this.length}, {x: this.x, y: this.y + this.length}];
+    this.points = rotatePoints(this.points, this.angleDegrees);
 }
+
