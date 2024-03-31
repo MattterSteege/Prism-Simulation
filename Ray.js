@@ -43,8 +43,12 @@ Ray.prototype.draw = async function (ctx) {
     });
 
     const CurrentCheck = check;
-    rayParts.forEach((rayPart, i) => {
-        if (CurrentCheck !== check) return;
+    for (const rayPart of rayParts) {
+        const i = rayParts.indexOf(rayPart);
+        if (CurrentCheck !== check) continue;
+        // if (user.doStagedDraw !== 0)
+        //     await delay(user.doStagedDraw);
+
 
         ctx.beginPath();
         ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
@@ -67,7 +71,7 @@ Ray.prototype.draw = async function (ctx) {
             ctx.stroke();
             ctx.closePath();
         }
-    });
+    }
 }
 
 Ray.prototype.calculateRay = function(shapes){
@@ -85,7 +89,7 @@ Ray.prototype.calculateRay = function(shapes){
 
         let intersections = [];
 
-        const lastRayPart = rayParts.length === 0 ? firstRay : rayParts[rayParts.length - 1];
+        const lastRayPart = rayParts[rayParts.length - 1];
         shapes.forEach((shape) => {
             const intersection = shape.intersectRay(lastRayPart, shape);
             if (intersection)
@@ -175,11 +179,16 @@ Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
     // Convert angle to radians for calculations
     const isNegative = angleIncidence < 0;
     angleIncidence = Math.abs(angleIncidence);
+
+    // Ensure angleIncidence is within valid range (0 to 90 degrees)
+    angleIncidence = Math.min(angleIncidence, 90);
+
     const radiansIncidence = angleIncidence * Math.PI / 180;
 
     // Check if n2 is greater than n1 (critical angle check)
-    if (n2 > n1) {
-        const criticalAngle = Math.asin(n1 / n2) * 180 / Math.PI;
+    if (n2 < n1) {
+        const criticalAngle = this.calculateCriticalAngle(n1, n2);
+        //console.log(angleIncidence, criticalAngle);
         if (angleIncidence > criticalAngle) {
             return {
                 totalInteralReflection: true
@@ -190,11 +199,14 @@ Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
     // Apply Snell's law and convert back to degrees
     const angleRefraction = Math.asin(n1 * Math.sin(radiansIncidence) / n2) * 180 / Math.PI;
 
+    //console.log(n1, n2, angleIncidence, angleRefraction, isNegative);
+
     return {
         totalInteralReflection: false,
         angleToAdd: isNegative ? -angleRefraction : angleRefraction
     };
 };
+
 
 Ray.prototype.calculateCriticalAngle = function(n1, n2) {  // Check if n1 is greater than n2 (critical angle requires n1 > n2)
     if (n1 <= n2) {

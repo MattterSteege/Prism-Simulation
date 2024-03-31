@@ -165,3 +165,21 @@ function getClosestNumber(number, array) {
     }
     return closest;
 }
+
+//==============================================================================
+//get the how good the pc is (0-100) based the speed it can calculate some obscure math function
+function getPcSpeed(){
+    var start = new Date().getTime();
+    let x = 0;
+    for(var i = 0; i < 1000; i++){
+        for(var j = 0; j < 1000; j++) {
+            x += Math.pow(i, j);
+        }
+    }
+    console.log(x);
+    var end = new Date().getTime();
+    var time = end - start;
+    var speed = 100 - Math.min(100, time / 100);
+    return speed;
+}
+

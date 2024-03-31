@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotate Figures with Two-Finger Gesture</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    // Store the initial positions of two fingers
+    var touch1 = null;
+    var touch2 = null;
+    // Store the initial angle between the two fingers
+    var initialAngle = null;
+
+    function drawSquare(x, y, size, color) {
+        ctx.beginPath();
+        ctx.rect(x - size / 2, y - size / 2, size, size);
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+
+    function drawCircle(x, y, radius, color) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function rotateFigures(angle) {
+        clearCanvas();
+        var center = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        ctx.save();
+        ctx.translate(center.x, center.y);
+        ctx.rotate(angle);
+        drawSquare(50, 0, 50, 'blue');
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(center.x, center.y);
+        drawCircle(-50, 0, 30, 'red');
+        ctx.restore();
+    }
+
+    // Function to calculate the angle between two points
+    function calculateAngle(x1, y1, x2, y2) {
+        return Math.atan2(y2 - y1, x2 - x1);
+    }
+
+    canvas.addEventListener('touchstart', function(event) {
+        event.preventDefault();
+        var touches = event.touches;
+
+        if (touches.length === 2) {
+            touch1 = {
+                x: touches[0].clientX,
+                y: touches[0].clientY
+            };
+            touch2 = {
+                x: touches[1].clientX,
+                y: touches[1].clientY
+            };
+            initialAngle = calculateAngle(touch1.x, touch1.y, touch2.x, touch2.y);
+        }
+    });
+
+    canvas.addEventListener('touchmove', function(event) {
+        event.preventDefault();
+        var touches = event.touches;
+
+        if (touches.length === 2 && touch1 && touch2) {
+            var newTouch1 = {
+                x: touches[0].clientX,
+                y: touches[0].clientY
+            };
+            var newTouch2 = {
+                x: touches[1].clientX,
+                y: touches[1].clientY
+            };
+            var newAngle = calculateAngle(newTouch1.x, newTouch1.y, newTouch2.x, newTouch2.y);
+            var rotationAngle = newAngle - initialAngle;
+
+            rotateFigures(rotationAngle);
+
+            touch1 = newTouch1;
+            touch2 = newTouch2;
+            initialAngle = newAngle;
+        }
+    });
+
+    canvas.addEventListener('touchend', function(event) {
+        event.preventDefault();
+        touch1 = null;
+        touch2 = null;
+        initialAngle = null;
+    });
+</script>
+</body>
+</html>

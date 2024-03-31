@@ -1,10 +1,12 @@
 const _user = {
     showDebug: false,
-    showNormals: true,
+    showNormals: false,
     showIntersections: false,
+    AmountOfRays: 100, //25: meh pc, 50: normal pc, 100: good pc, 250: beast pc
     doStagedDraw: 0, //0 is off !0 is the ms to wait before drawing the next ray
 
-    maxLightBounces: 10,
+
+    maxLightBounces: 25,
 }
 
 const handler = {
@@ -23,4 +25,4 @@ const handler = {
     }
 }
 
-const user = new Proxy(_user, handler)
+let user = new Proxy(_user, handler)

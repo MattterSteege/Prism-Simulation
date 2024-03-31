@@ -60,19 +60,13 @@ function CanvasState(canvas) {
         }
 
         var rays = myState.rays;
-        var l = rays.length;
-        for (var i = l-1; i >= 0; i--) {
-            if (rays[i].contains(mx, my)) {
-                var mySel = rays[i];
-                // Keep track of where in the object we clicked
-                // so we can move it smoothly (see mousemove)
-                myState.dragoffx = mx - mySel.x;
-                myState.dragoffy = my - mySel.y;
-                myState.dragging = true;
-                myState.selection = mySel;
-                myState.valid = false;
-                return;
-            }
+        if (rays[0].contains(mx, my)) {
+            myState.dragoffx = mx - rays[0].x;
+            myState.dragoffy = my - rays[0].y;
+            myState.dragging = true;
+            myState.selection = rays[0];
+            myState.valid = false;
+            return;
         }
 
         // havent returned means we have failed to select anything.
@@ -84,7 +78,7 @@ function CanvasState(canvas) {
     }, true);
 
     canvas.addEventListener('mousemove', function(e) {
-        if (myState.dragging){
+        if (myState.dragging && myState.selection.constructor.name !== 'Ray'){
             var mouse = myState.getMouse(e);
             // We don't want to drag the object by its top-left corner, we want to drag it
             // from where we clicked. Thats why we saved the offset and use it here
@@ -92,6 +86,16 @@ function CanvasState(canvas) {
             myState.selection.y = mouse.y - myState.dragoffy;
             myState.selection.updatePoints();
             myState.valid = false; // Something's dragging so we must redraw
+        }
+        else if(myState.dragging && myState.selection.constructor.name === 'Ray'){
+            const rays = myState.rays;
+            rays.forEach(ray => {
+                var mouse = myState.getMouse(e);
+                ray.x = mouse.x - myState.dragoffx;
+                ray.y = mouse.y - myState.dragoffy;
+                ray.updatePoints();
+                myState.valid = false;
+            });
         }
     }, true);
     canvas.addEventListener('mouseup', function() {
@@ -139,6 +143,8 @@ function CanvasState(canvas) {
         canvas.dispatchEvent(mouseEvent);
     }, false);
 
+    let lastTouches = [];
+
     canvas.addEventListener('touchmove', function(e) {
         e.preventDefault();
         if (e.touches.length === 1) {
@@ -150,11 +156,19 @@ function CanvasState(canvas) {
             canvas.dispatchEvent(mouseEvent);
         }
         else if (e.touches.length === 2) {
-            var touch1 = e.touches[0];
-            var touch2 = e.touches[1];
-            var angle = Math.atan2(touch2.clientY - touch1.clientY, touch2.clientX - touch1.clientX);
-            myState.selection.angleRadians = angle;
-            myState.valid = false;
+            let touches = [];
+            for (let i = 0; i < e.touches.length; i++) {
+                touches.push({x: e.touches[i].clientX, y: e.touches[i].clientY});
+            }
+            if (lastTouches.length === 2) {
+                let angle = Math.atan2(touches[0].y - touches[1].y, touches[0].x - touches[1].x) - Math.atan2(lastTouches[0].y - lastTouches[1].y, lastTouches[0].x - lastTouches[1].x);
+                let rays = myState.rays;
+                rays.forEach(ray => {
+                    ray.angleDegrees += angle;
+                    myState.valid = false;
+                });
+            }
+            lastTouches = touches;
         }
     }, false);
 
@@ -256,11 +270,13 @@ function init() {
     s.addShape(new Circle(600, 200, 50, '#8338ec'));
     //s.addShape(new Text(50, 50, '20px Arial', '#fff', 'Drag me!'));
 
-    s.addRay(new Ray(200, 500, -10, 400, '#888'));
-    s.addRay(new Ray(200, 500, -10, 450, '#888'));
-    s.addRay(new Ray(200, 500, -10, 500, '#888'));
-    s.addRay(new Ray(200, 500, -10, 550, '#888'));
-    s.addRay(new Ray(200, 500, -10, 600, '#888'));
-    s.addRay(new Ray(200, 500, -10, 650, '#888'));
-    s.addRay(new Ray(200, 500, -10, 700, '#888'));
+    let multiplier = (700-400) / user.AmountOfRays;
+    const x = 200;
+    const y = 500;
+    const angle = -10;
+    const waveLength = 400;
+    const fill = '#888';
+    for (let i = 0; i < user.AmountOfRays; i++) {
+        s.addRay(new Ray(x, y, angle, waveLength + (multiplier * i), fill));
+    }
 }
