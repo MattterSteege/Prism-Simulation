@@ -274,9 +274,11 @@ function init() {
     const x = 200;
     const y = 500;
     const angle = -10;
-    const waveLength = 400;
+    const waveLength = 700;
     const fill = '#888';
     for (let i = 0; i < user.AmountOfRays; i++) {
-        s.addRay(new Ray(x, y, angle, waveLength + (multiplier * i), fill));
+        s.addRay(new Ray(x, y, angle, waveLength - (multiplier * i), fill));
     }
+
+    s.addRay(new Ray(x, y, angle, 490, fill, '#ffffff'));
 }

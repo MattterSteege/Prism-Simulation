@@ -1,7 +1,7 @@
 //Ray class
 Ray.prototype = new Shape();
 Ray.prototype.constructor = Ray;
-function Ray(x, y, angle, waveLength, fill) {
+function Ray(x, y, angle, waveLength, fill, lightColorInternal) {
     this.x = x || 0;
     this.y = y || 0;
     this.w = 50;
@@ -9,6 +9,7 @@ function Ray(x, y, angle, waveLength, fill) {
     this.angleDegrees =  normalizeDegreeAngle(angle || 0);
     this.waveLength = waveLength || 500;
     this.fill = fill || '#AAAAAA';
+    this.lightColorInternal = lightColorInternal || null;
 
     this.updatePoints();
 
@@ -51,7 +52,8 @@ Ray.prototype.draw = async function (ctx) {
 
 
         ctx.beginPath();
-        ctx.strokeStyle = RGBToHex(nmToRGB(this.waveLength));
+        ctx.strokeStyle = this.lightColorInternal || RGBToHex(nmToRGB(this.waveLength));
+
         ctx.moveTo(rayPart.from.x, rayPart.from.y);
         ctx.lineTo(rayPart.to.x, rayPart.to.y);
         ctx.stroke();
@@ -99,6 +101,14 @@ Ray.prototype.calculateRay = function(shapes){
         if(intersections.length === 0) break;
 
         intersections.forEach((intersection) => {
+            var skip = false;
+            shapes.forEach((shape) => {
+                if (shape === intersection.shape) return;
+                if (shape.contains(intersection.to.x, intersection.to.y)) {
+                    skip = true;
+                }
+            });
+            if (skip) return;
             const distance = Math.sqrt(Math.pow(intersection.to.x - intersection.from.x, 2) + Math.pow(intersection.to.y - intersection.from.y, 2));
             if (distance < closestDistance) {
                 closestIntersection = intersection;
@@ -176,6 +186,7 @@ Ray.prototype.updatePoints = function(){
 }
 
 Ray.prototype.calculateRefractedAngle = function(n1, n2, angleIncidence) {
+    if (Math.abs(n2 - n1) < 0.0001) console.log(n1, n2, angleIncidence)
     // Convert angle to radians for calculations
     const isNegative = angleIncidence < 0;
     angleIncidence = Math.abs(angleIncidence);
