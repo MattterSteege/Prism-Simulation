@@ -264,7 +264,7 @@ function init() {
     s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(300, 200, 700, 0,'#ffbe0b'));
+    s.addShape(new Triangle(300, 200, 100, 0,'#ffbe0b'));
     s.addShape(new Rectangle(200, 200, 100, 100,0,'#fb5607'));
     s.addShape(new Line(400, 200, 100, 5, 0, '#ff006e'));
     s.addShape(new Circle(600, 200, 50, '#8338ec'));
