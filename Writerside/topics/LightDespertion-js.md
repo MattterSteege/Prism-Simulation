@@ -14,7 +14,7 @@ De vergelijking gaat als volgt:
 n^2\left(\lambda\right)=1+\frac{B_1\lambda^2}{\lambda^2-C_1}+\frac{B_2\lambda^2}{\lambda^2-C_2}+\frac{B_3\lambda^2}{\lambda^2-C_3}
 </code-block>
 
-daarbij is:<br>
+daarbij is:
 - n de brekingsindex
 - λ de golflengte van het licht in vacuüm in meters
 - B1, B2, B3, C1, C2 en C3 de experimenteel bepaalde Sellmeier-coëfficiënten
@@ -46,3 +46,6 @@ function getAirIndex(wavelength) {
         167917E-8 / ( 57.362 - Math.pow( wavelength * 1E6, -2 ) );
 }
 ```
+
+Deze code is te vinden op [LightDispersion.js](https://github.com/MattterSteege/Prism-Simulation/blob/master/LightDispersion.js)
+![LDJsQR.svg](../../Images/LDJsQR.svg)
