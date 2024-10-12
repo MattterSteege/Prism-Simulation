@@ -2,6 +2,8 @@
 
 Prism-Simulation is a JavaScript project that simulates the behavior of light when it interacts with different shapes. It includes features such as light refraction, reflection, and absorption calculations. The project also supports multi-lamp functionality and the ability to rotate objects.
 
+If you like to view the result of the research you can view it here: [Google Drive](https://docs.google.com/document/d/14kL2AtjUEMOBuS-wz3PoKWE7DgAKzzjY/edit?usp=sharing&ouid=116753800996300593579&rtpof=true&sd=true) (fully written in Dutch)
+
 ## documentation
 
 If you are interested in the documentation on how this project works, you can take a peek on [https://pws-docs.kronk.tech](https://pws-docs.kronk.tech) (which is fully written in dutch, but you can use Google translate ;) ), only interested in a PDF file, thats right here: [https://pws-docs.kronk.tech/PrismaSimulatie.pdf](https://pws-docs.kronk.tech/PrismaSimulatie.pdf)
