@@ -10,10 +10,9 @@ If you are interested in the documentation on how this project works, you can ta
 
 - Light system based on actual mathematics
 - Support for different shapes (squares, lines, etc. as long as they have holes)
-- Object rotation (WIP)
+- Object rotation
 - Calculation of the normal of the line on which it hits
-- Refraction calculations (WIP and can be set by `user.maxLightCalculations`)
-- Multi-lamp functionality (WIP)
+- Refraction calculations
 - works on mobile and touchscreens
 - User settings for various parameters
 
