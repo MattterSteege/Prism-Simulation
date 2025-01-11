@@ -1,37 +1,106 @@
-<html lang="nl">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Licht Breking</title>
-    <script src="LightDispersion.js"></script>
-    <script src="config.js"></script>
-    <script src="utils.js"></script>
-    <script src="Shape.js"></script>
-    <script src="Text.js"></script>
-    <script src="Rectangle.js"></script>
-    <script src="Circle.js"></script>
-    <script src="Triangle.js"></script>
-    <script src="Line.js"></script>
-    <script src="Ray.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Simulation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .control-panel {
+            width: 15vw;
+            background-color: #000;
+            padding: 20px;
+            border-right: 1px solid #000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .control-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .canvas-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eaeaea;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: crosshair;
+        }
+    </style>
+    <script defer src="Compiled/PWS.js"></script>
 </head>
-<body onload="init()" style="margin: 0; padding: 0;">
-    <canvas id="canvas" width="400" height="300" style="background: black">Canvas not supported</canvas>
-    <!--
-    The coords system is as follows:
-    (0,0) is the top left corner
-    x increases to the right
-    y increases downwards
+<body onload="init()">
+<div class="container">
+    <aside class="control-panel">
+        <h2>Control Panel</h2>
+        <div class="control-group">
+            <label for="amountOfRays">Amount of Rays:</label>
+            <input type="number" id="amountOfRays" value="100" min="1" max="250" onchange="user.AmountOfRays = document.getElementById('amountOfRays').value">
+        </div>
+        <div class="control-group">
+            <label for="maxLightBounces">Max Light Bounces:</label>
+            <input type="number" id="maxLightBounces" value="25" min="1" max="100" onchange="user.MaxLightBounces = document.getElementById('maxLightBounces').value;">
+        </div>
+        <button id="resetButton" onclick="reset()">Reset Simulation</button>
+    </aside>
+    <main class="canvas-container">
+        <canvas id="canvas" width="400" height="300" style="background: #000;">Canvas not supported</canvas>
+    </main>
+</div>
 
-    rotation is clockwise with:
-    0deg pointing to the right
-    90deg pointing down
-    180deg pointing left
-    270deg pointing up
-    360deg pointing right again
-    (and any value in between being a linear interpolation)
-
-
-    TODO: when a light ray is inside a shape, and it hits another shape (inside the first shape), it should not change direction
-
-    -->
-    <script src="dragging.js"></script>
 </body>
 </html>
