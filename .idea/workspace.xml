@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="54b63d9e-46e2-4c2a-bca1-5107109a30c3" name="Changes" comment="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same.">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Circle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Circle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LightDispersion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/LightDispersion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ray.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rectangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Rectangle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shape.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Shape.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Text.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Triangle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dragging.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dragging.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/touchTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+        <option value="package.json" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MJTSgamer&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MJTSgamer/Prism-Simulation&quot;,
+    &quot;accountId&quot;: &quot;93a43fc3-be9b-49d8-b3ac-ae023085fa11&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Ray.js" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2cUy2AP14myaX3lEC6KBSaypJqF" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JavaScript Debug.index.html.executor": "Run",
+    "Node.js.Ray.js.executor": "Run",
+    "Node.js.build.js.executor": "Run",
+    "Node.js.dragging.js.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/Coding/Webstorm/Projects/htmlTest/PWS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settings.deploy.options",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS\src" />
+      <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS" />
+      <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS\old" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-WS-243.21565.180" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="54b63d9e-46e2-4c2a-bca1-5107109a30c3" name="Changes" comment="" />
+      <created>1708180241206</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1708180241206</updated>
+      <workItem from="1708180242244" duration="2433000" />
+      <workItem from="1708248598070" duration="4110000" />
+      <workItem from="1708259463176" duration="1372000" />
+      <workItem from="1708274782254" duration="4505000" />
+      <workItem from="1708329375486" duration="2967000" />
+      <workItem from="1708356162098" duration="118000" />
+      <workItem from="1708356292780" duration="47000" />
+      <workItem from="1708425849817" duration="122000" />
+      <workItem from="1708432564311" duration="55000" />
+      <workItem from="1708444485113" duration="3849000" />
+      <workItem from="1708536682404" duration="647000" />
+      <workItem from="1708597206471" duration="31000" />
+      <workItem from="1708597256077" duration="70000" />
+      <workItem from="1708610713514" duration="644000" />
+      <workItem from="1708613561302" duration="173000" />
+      <workItem from="1708623089588" duration="589000" />
+      <workItem from="1708624063939" duration="927000" />
+      <workItem from="1708625941059" duration="4737000" />
+      <workItem from="1708672590852" duration="4821000" />
+      <workItem from="1708681494039" duration="4466000" />
+      <workItem from="1708801320756" duration="2407000" />
+      <workItem from="1708878423076" duration="4374000" />
+      <workItem from="1708884536277" duration="4486000" />
+      <workItem from="1708959362730" duration="7154000" />
+      <workItem from="1709049593134" duration="5502000" />
+      <workItem from="1709056657110" duration="33000" />
+      <workItem from="1709057521253" duration="677000" />
+      <workItem from="1709133777539" duration="7812000" />
+      <workItem from="1709142994660" duration="6125000" />
+      <workItem from="1709189579500" duration="3637000" />
+      <workItem from="1709222444524" duration="1496000" />
+      <workItem from="1709225358878" duration="2583000" />
+      <workItem from="1709311583913" duration="616000" />
+      <workItem from="1709314872788" duration="2216000" />
+      <workItem from="1709395098220" duration="201000" />
+      <workItem from="1709396420761" duration="2334000" />
+      <workItem from="1709399993790" duration="3811000" />
+      <workItem from="1709464579423" duration="927000" />
+      <workItem from="1709475327610" duration="43000" />
+      <workItem from="1709545811516" duration="7041000" />
+      <workItem from="1709559701954" duration="14000" />
+      <workItem from="1709751780891" duration="2250000" />
+      <workItem from="1709803220601" duration="291000" />
+      <workItem from="1709892747896" duration="2812000" />
+      <workItem from="1709903880774" duration="19000" />
+      <workItem from="1709917823942" duration="1009000" />
+      <workItem from="1710002030679" duration="2740000" />
+      <workItem from="1710341159298" duration="2135000" />
+      <workItem from="1710496885450" duration="2196000" />
+      <workItem from="1710502472296" duration="122000" />
+      <workItem from="1710504099363" duration="885000" />
+      <workItem from="1710597322878" duration="602000" />
+      <workItem from="1710777848107" duration="1849000" />
+      <workItem from="1710780765488" duration="117000" />
+      <workItem from="1710872307345" duration="8000" />
+      <workItem from="1710874167410" duration="616000" />
+      <workItem from="1710920390712" duration="1421000" />
+      <workItem from="1710956961464" duration="3423000" />
+      <workItem from="1710960420355" duration="22000" />
+      <workItem from="1711030803962" duration="967000" />
+      <workItem from="1711032311509" duration="7068000" />
+      <workItem from="1711040522887" duration="425000" />
+      <workItem from="1711123187421" duration="3622000" />
+      <workItem from="1711559092671" duration="2080000" />
+      <workItem from="1711726650418" duration="3299000" />
+      <workItem from="1711811525448" duration="613000" />
+      <workItem from="1711813320127" duration="20000" />
+      <workItem from="1711906175395" duration="4295000" />
+      <workItem from="1711958788877" duration="8000" />
+      <workItem from="1711992738382" duration="12000" />
+      <workItem from="1712166433214" duration="226000" />
+      <workItem from="1712166742225" duration="48000" />
+      <workItem from="1713943234130" duration="2787000" />
+      <workItem from="1714321960152" duration="339000" />
+      <workItem from="1736622369244" duration="1149000" />
+    </task>
+    <task id="LOCAL-00001" summary="intial">
+      <created>1708180763788</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1708180763788</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added multi-lamp functionality, finally reworked the angle systems. but i paved the road to more work.... :)">
+      <created>1708182550040</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1708182550040</updated>
+    </task>
+    <task id="LOCAL-00003" summary="nu kan je de lamp 360 ronddraaien zonder bugs enz.">
+      <created>1708252170954</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1708252170954</updated>
+    </task>
+    <task id="LOCAL-00004" summary="een robuster systeem gemaakt">
+      <created>1708278818604</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1708278818604</updated>
+    </task>
+    <task id="LOCAL-00005" summary="beetje vergeten dit te updaten">
+      <created>1708444682523</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708444682523</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Eerste versie staat er, zo'n beetje">
+      <created>1708447607022</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708447607022</updated>
+    </task>
+    <task id="LOCAL-00007" summary="wat ik heb gedaan deze keer :) &#10;&#10;(hoort bij &quot;Eerste versie staat er, zo'n beetje&quot; commit)">
+      <created>1708448357589</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708448357589</updated>
+    </task>
+    <task id="LOCAL-00008" summary="opnieuw begonnen">
+      <option name="closed" value="true" />
+      <created>1708681941881</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708681941881</updated>
+    </task>
+    <task id="LOCAL-00009" summary="backup">
+      <option name="closed" value="true" />
+      <created>1708685965834</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1708685965834</updated>
+    </task>
+    <task id="LOCAL-00010" summary="backup">
+      <option name="closed" value="true" />
+      <created>1708882788439</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1708882788440</updated>
+    </task>
+    <task id="LOCAL-00011" summary="backup">
+      <option name="closed" value="true" />
+      <created>1708889985704</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1708889985704</updated>
+    </task>
+    <task id="LOCAL-00012" summary="backup">
+      <option name="closed" value="true" />
+      <created>1708963813691</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1708963813691</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Very nice - Borat&#10;&#10;BTW, gwn backup">
+      <option name="closed" value="true" />
+      <created>1709052304976</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1709052304976</updated>
+    </task>
+    <task id="LOCAL-00014" summary="backup">
+      <option name="closed" value="true" />
+      <created>1709133915937</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1709133915937</updated>
+    </task>
+    <task id="LOCAL-00015" summary="backup">
+      <option name="closed" value="true" />
+      <created>1709138400252</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1709138400252</updated>
+    </task>
+    <task id="LOCAL-00016" summary="de normaal wordt nu berekend, maar bij driehoeken werkt het nog niet.">
+      <option name="closed" value="true" />
+      <created>1709141963535</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1709141963535</updated>
+    </task>
+    <task id="LOCAL-00017" summary="nu werkt het ook driehoeken">
+      <option name="closed" value="true" />
+      <created>1709147617922</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1709147617922</updated>
+    </task>
+    <task id="LOCAL-00018" summary="grote update, dit is ook gelijk de nieuwe gehoste versie">
+      <option name="closed" value="true" />
+      <created>1709148958923</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1709148958923</updated>
+    </task>
+    <task id="LOCAL-00019" summary="backup">
+      <option name="closed" value="true" />
+      <created>1709193164566</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1709193164566</updated>
+    </task>
+    <task id="LOCAL-00020" summary="backup">
+      <option name="closed" value="true" />
+      <created>1709223908481</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1709223908481</updated>
+    </task>
+    <task id="LOCAL-00021" summary="backup">
+      <option name="closed" value="true" />
+      <created>1709317085171</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1709317085171</updated>
+    </task>
+    <task id="LOCAL-00022" summary="backup">
+      <option name="closed" value="true" />
+      <created>1709403807037</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1709403807037</updated>
+    </task>
+    <task id="LOCAL-00023" summary="grote update, veel dingen, grote blij :)">
+      <option name="closed" value="true" />
+      <created>1710004763948</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1710004763948</updated>
+    </task>
+    <task id="LOCAL-00024" summary="De licht simulatie is deels herschreven en ik denk dat ik nu beter de rest kan implementeren.">
+      <option name="closed" value="true" />
+      <created>1711040940711</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1711040940711</updated>
+    </task>
+    <task id="LOCAL-00025" summary="De licht simulatie is deels herschreven en ik denk dat ik nu beter de rest kan implementeren.">
+      <option name="closed" value="true" />
+      <created>1711126616995</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1711126616995</updated>
+    </task>
+    <task id="LOCAL-00026" summary="WOW, bijna klaar">
+      <option name="closed" value="true" />
+      <created>1711560062866</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1711560062866</updated>
+    </task>
+    <task id="LOCAL-00027" summary="nu weet de lichtstraal of hij in een object zit en je kan alles draaien door te scrollen óf met twee vingers te draaien">
+      <option name="closed" value="true" />
+      <created>1711728570183</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1711728570183</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Bassicly done, some more update and nicing things up, some touchscreen things">
+      <option name="closed" value="true" />
+      <created>1711909903257</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1711909903257</updated>
+    </task>
+    <task id="LOCAL-00029" summary="update">
+      <option name="closed" value="true" />
+      <created>1711910268344</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1711910268344</updated>
+    </task>
+    <task id="LOCAL-00030" summary="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same.">
+      <option name="closed" value="true" />
+      <created>1713945384869</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1713945384869</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="intial" />
+    <MESSAGE value="Added multi-lamp functionality, finally reworked the angle systems. but i paved the road to more work.... :)" />
+    <MESSAGE value="nu kan je de lamp 360 ronddraaien zonder bugs enz." />
+    <MESSAGE value="een robuster systeem gemaakt" />
+    <MESSAGE value="beetje vergeten dit te updaten" />
+    <MESSAGE value="Eerste versie staat er, zo'n beetje" />
+    <MESSAGE value="wat ik heb gedaan deze keer :) &#10;&#10;(hoort bij &quot;Eerste versie staat er, zo'n beetje&quot; commit)" />
+    <MESSAGE value="opnieuw begonnen" />
+    <MESSAGE value="Very nice - Borat&#10;&#10;BTW, gwn backup" />
+    <MESSAGE value="de normaal wordt nu berekend, maar bij driehoeken werkt het nog niet." />
+    <MESSAGE value="nu werkt het ook driehoeken" />
+    <MESSAGE value="grote update, dit is ook gelijk de nieuwe gehoste versie" />
+    <MESSAGE value="backup" />
+    <MESSAGE value="okay, so now it is sort of broken, but i can fix it probably" />
+    <MESSAGE value="grote update, veel dingen, grote blij :)" />
+    <MESSAGE value="De licht simulatie is deels herschreven en ik denk dat ik nu beter de rest kan implementeren." />
+    <MESSAGE value="WOW, bijna klaar" />
+    <MESSAGE value="nu weet de lichtstraal of hij in een object zit en je kan alles draaien door te scrollen óf met twee vingers te draaien" />
+    <MESSAGE value="Bassicly done" />
+    <MESSAGE value="Bassicly done, some more update and nicing things up, some touchscreen things" />
+    <MESSAGE value="update" />
+    <MESSAGE value="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same." />
+    <option name="LAST_COMMIT_MESSAGE" value="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same." />
+  </component>
+</project>
