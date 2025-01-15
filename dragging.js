@@ -1,6 +1,6 @@
 function CanvasState(canvas) {
     // **** First some setup! ****
-    console.log(canvas);
+
     this.canvas = canvas;
     this.width = canvas.width;
     this.height = canvas.height;
@@ -261,10 +261,10 @@ CanvasState.prototype.getMouse = function(e) {
 
 var s = new CanvasState(document.getElementById('canvas'));
 function init() {
-    s.canvas.width = s.width = window.innerWidth - window.innerWidth * 0.15;
+    s.canvas.width = s.width = window.innerWidth;
     s.canvas.height = s.height = window.innerHeight;
 
-    s.addShape(new Triangle(300, 200, 700, 0,'#ffbe0b'));
+    s.addShape(new Triangle(300, 200, 100, 0,'#ffbe0b'));
     s.addShape(new Rectangle(200, 200, 100, 100,0,'#fb5607'));
     s.addShape(new Line(400, 200, 100, 5, 0, '#ff006e'));
     s.addShape(new Circle(600, 200, 50, '#8338ec'));
@@ -279,11 +279,6 @@ function init() {
     for (let i = 0; i < user.AmountOfRays; i++) {
         s.addRay(new Ray(x, y, angle, waveLength - (multiplier * i), fill));
     }
-}
 
-function reset() {
-    s.shapes = [];
-    s.rays = [];
-    s.valid = false;
-    init();
+    s.addRay(new Ray(x, y, angle, 490, fill, '#ffffff'));
 }
