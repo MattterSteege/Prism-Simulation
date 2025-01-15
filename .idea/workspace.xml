@@ -4,23 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="54b63d9e-46e2-4c2a-bca1-5107109a30c3" name="Changes" comment="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same.">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Circle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Circle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LightDispersion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/LightDispersion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Line.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ray.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rectangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Rectangle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Shape.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Shape.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Text.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Triangle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dragging.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dragging.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/touchTest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.js" afterDir="false" />
+    <list default="true" id="54b63d9e-46e2-4c2a-bca1-5107109a30c3" name="Changes" comment="a bit nicer, needs some more work">
+      <change afterPath="$PROJECT_DIR$/src/shapes/Shape.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiled/PWS.js" beforeDir="false" afterPath="$PROJECT_DIR$/Compiled/PWS.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiled/PWS.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Compiled/PWS.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiled/PWS.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Compiled/PWS.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.js" beforeDir="false" afterPath="$PROJECT_DIR$/build.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Circle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Circle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LightDispersion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/LightDispersion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Line.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ray.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Rectangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Rectangle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Shape.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Text.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Triangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Triangle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dragging.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dragging.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,35 +73,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript Debug.index.html.executor": "Run",
-    "Node.js.Ray.js.executor": "Run",
-    "Node.js.build.js.executor": "Run",
-    "Node.js.dragging.js.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Coding/Webstorm/Projects/htmlTest/PWS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settings.deploy.options",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;JavaScript Debug.index.html.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.Ray.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.build.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.dragging.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Coding/Webstorm/Projects/htmlTest/PWS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.deploy.options&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS\src\shapes" />
       <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS\src" />
       <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS" />
       <recent name="D:\Coding\Webstorm\Projects\htmlTest\PWS\old" />
@@ -196,7 +197,9 @@
       <workItem from="1712166742225" duration="48000" />
       <workItem from="1713943234130" duration="2787000" />
       <workItem from="1714321960152" duration="339000" />
-      <workItem from="1736622369244" duration="1149000" />
+      <workItem from="1736622369244" duration="1294000" />
+      <workItem from="1736702992498" duration="645000" />
+      <workItem from="1736863421795" duration="915000" />
     </task>
     <task id="LOCAL-00001" summary="intial">
       <created>1708180763788</created>
@@ -431,7 +434,23 @@
       <option name="project" value="LOCAL" />
       <updated>1713945384869</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="a bit nicer, needs some more work">
+      <option name="closed" value="true" />
+      <created>1736623671396</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1736623671396</updated>
+    </task>
+    <task id="LOCAL-00032" summary="a bit nicer, needs some more work">
+      <option name="closed" value="true" />
+      <created>1736623707315</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1736623707315</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -471,6 +490,7 @@
     <MESSAGE value="Bassicly done, some more update and nicing things up, some touchscreen things" />
     <MESSAGE value="update" />
     <MESSAGE value="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same." />
-    <option name="LAST_COMMIT_MESSAGE" value="When 2 shapes are INSIDE eachother, skip the calculation, since index is the same." />
+    <MESSAGE value="a bit nicer, needs some more work" />
+    <option name="LAST_COMMIT_MESSAGE" value="a bit nicer, needs some more work" />
   </component>
 </project>
